@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0040148, g: 0.0042337226, b: 0.0044871187, a: 1}
+  m_IndirectSpecularColor: {r: 0.0040169233, g: 0.0042347163, b: 0.0044871443, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -838,7 +838,7 @@ MonoBehaviour:
   attackPoint: {fileID: 877989961}
   attackRadius: 1.5
   perfectAttackTime: 1.0833334
-  timeMargin: 1
+  timeMargin: 0.1
   musicSource: {fileID: 2054170807}
 --- !u!114 &60433350
 MonoBehaviour:
@@ -7966,7 +7966,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2042714626}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0056626704, y: 0.99354774, z: -0.097460166, w: 0.057727523}
+  m_LocalRotation: {x: 0.0056626694, y: 0.99354774, z: -0.097460166, w: 0.05772752}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

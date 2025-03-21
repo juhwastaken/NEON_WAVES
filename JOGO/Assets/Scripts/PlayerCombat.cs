@@ -19,11 +19,12 @@ public class PlayerCombat : MonoBehaviour
     private float lastAttackTime = -Mathf.Infinity;
     private bool musicStarted = false;
     public AudioSource musicSource;
+    float musicTime;
 
     void Start()
     {
         animator = GetComponent<Animator>();
-
+       // musicSource = GetComponent<AudioSource>();
         // Se a música já estiver tocando ao iniciar o jogo
         if (musicSource != null && musicSource.isPlaying)
         {
@@ -33,6 +34,8 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
+         //Debug.Log(musicSource.time);
+
         if (isDead) return; // Se o jogador morreu, não pode atacar
 
         // Verifica se a música começou a tocar
@@ -53,6 +56,7 @@ public class PlayerCombat : MonoBehaviour
     {
         float currentTime = Time.time;
         float timeSinceLastAttack = currentTime - lastAttackTime;
+        musicTime = musicSource.time;
 
         lastAttackTime = currentTime;
         Attack(timeSinceLastAttack);
@@ -82,8 +86,11 @@ public class PlayerCombat : MonoBehaviour
 
         if (enemyHit)
         {
+            Debug.Log(Mathf.Min((musicTime / perfectAttackTime) % 1f, 1-( (musicTime / perfectAttackTime) % 1f)));
+
+
             // Somente aumenta o multiplicador se o jogador acertar um inimigo no tempo correto
-            if (Mathf.Abs(timeSinceLastAttack - perfectAttackTime) <= timeMargin)
+            if (Mathf.Abs(Mathf.Min((musicTime / perfectAttackTime) % 1f, 1-( (musicTime / perfectAttackTime) % 1f))) <= timeMargin)
             {
                 currentDamageMultiplier = Mathf.Min(currentDamageMultiplier * 2, maxMultiplier);
             }
