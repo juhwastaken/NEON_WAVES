@@ -2,44 +2,55 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMoviment : MonoBehaviour
+[RequireComponent(typeof(Rigidbody))]
+public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float jumpForce = 7f;
-    public CharacterController controller;
-    public float gravity = -9.81f;
-
-    private Vector3 velocity;
-    private bool isGrounded;
     public Transform cameraTransform;
+
+    private Rigidbody rb;
+    private bool isGrounded;
 
     void Start()
     {
-        controller = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        isGrounded = controller.isGrounded;
-
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f;
-        }
-
+        // Movimento horizontal
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
-        Vector3 move = cameraTransform.right * moveX + cameraTransform.forward * moveZ;
-        move.y = 0f; // Evita que o personagem se mova na direção da inclinação da câmera
-        controller.Move(move.normalized * moveSpeed * Time.deltaTime);
+        Vector3 moveDirection = (cameraTransform.right * moveX + cameraTransform.forward * moveZ);
+        moveDirection.y = 0f; // Mantém o movimento no plano XZ
 
+        Vector3 moveVelocity = moveDirection.normalized * moveSpeed;
+        Vector3 currentVelocity = rb.velocity;
+        rb.velocity = new Vector3(moveVelocity.x, currentVelocity.y, moveVelocity.z);
+
+        // Pulo
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+    }
 
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+    void OnCollisionEnter(Collision collision)
+    {
+        // Considera "chão" se a colisão for de baixo
+        foreach (ContactPoint contact in collision.contacts)
+        {
+            if (Vector3.Dot(contact.normal, Vector3.up) > 0.5f)
+            {
+                isGrounded = true;
+            }
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        isGrounded = false;
     }
 }
