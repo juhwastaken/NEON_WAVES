@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -9,23 +10,30 @@ public class PlayerCombat : MonoBehaviour
     public Transform attackPoint;
     public float attackRadius = 1.5f;
 
+    public float dashRange = 10f;
+    public float dashSpeed = 20f;
+    public float dashCooldown = 5f;
+    private float lastDashTime = -Mathf.Infinity;
+    private bool isDashing = false;
+    private bool isInvulnerable = false;
+    private Coroutine dashCoroutine;
+
     private Animator animator;
     private bool isDead = false;
 
     private int currentDamageMultiplier = 1;
     private int maxMultiplier = 32;
     public float perfectAttackTime = 1.0833333334f;
-    public float timeMargin = 0.1f; // Margem de erro configurável
+    public float timeMargin = 0.1f;
     private float lastAttackTime = -Mathf.Infinity;
     private bool musicStarted = false;
     public AudioSource musicSource;
-    float musicTime;
+    private float musicTime;
 
     void Start()
     {
         animator = GetComponent<Animator>();
-       // musicSource = GetComponent<AudioSource>();
-        // Se a música já estiver tocando ao iniciar o jogo
+
         if (musicSource != null && musicSource.isPlaying)
         {
             musicStarted = true;
@@ -34,21 +42,23 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
-         //Debug.Log(musicSource.time);
+        if (isDead) return;
 
-        if (isDead) return; // Se o jogador morreu, não pode atacar
-
-        // Verifica se a música começou a tocar
         if (!musicStarted && musicSource.isPlaying)
         {
             musicStarted = true;
         }
 
-        if (!musicStarted) return; // Se a música não começou, o ataque não ativa
+        if (!musicStarted) return;
 
-        if (Input.GetMouseButtonDown(0)) // Clique esquerdo para atacar
+        if (Input.GetMouseButtonDown(0))
         {
             AttemptAttack();
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            AttemptDash();
         }
     }
 
@@ -74,7 +84,7 @@ public class PlayerCombat : MonoBehaviour
             EnemyAI enemyAI = enemy.GetComponent<EnemyAI>();
             if (enemyAI != null)
             {
-                enemyHit = true; // Indica que um inimigo foi atingido
+                enemyHit = true;
 
                 Vector3 knockbackDirection = (enemy.transform.position - transform.position).normalized;
                 int finalDamage = baseDamage * currentDamageMultiplier;
@@ -86,14 +96,34 @@ public class PlayerCombat : MonoBehaviour
 
         if (enemyHit)
         {
-            Debug.Log(Mathf.Min((musicTime / perfectAttackTime) % 1f, 1-( (musicTime / perfectAttackTime) % 1f)));
+            float beatDistance = Mathf.Min((musicTime / perfectAttackTime) % 1f, 1f - ((musicTime / perfectAttackTime) % 1f));
+            Debug.Log($"Beat Distance (Attack): {beatDistance}");
 
-
-            // Somente aumenta o multiplicador se o jogador acertar um inimigo no tempo correto
-            if (Mathf.Abs(Mathf.Min((musicTime / perfectAttackTime) % 1f, 1-( (musicTime / perfectAttackTime) % 1f))) <= timeMargin)
+            if (beatDistance <= timeMargin)
             {
                 currentDamageMultiplier = Mathf.Min(currentDamageMultiplier * 2, maxMultiplier);
             }
+        }
+    }
+
+    void AttemptDash()
+    {
+        if (Time.time >= lastDashTime + dashCooldown)
+        {
+            GameObject nearestEnemy = FindNearestEnemyInRange();
+            if (nearestEnemy != null)
+            {
+                if (dashCoroutine != null) StopCoroutine(dashCoroutine);
+                dashCoroutine = StartCoroutine(ExecuteDash(nearestEnemy.transform));
+            }
+            else
+            {
+                Debug.Log("Nenhum inimigo próximo para dash.");
+            }
+        }
+        else
+        {
+            Debug.Log("Dash em cooldown.");
         }
     }
 
@@ -101,10 +131,15 @@ public class PlayerCombat : MonoBehaviour
     {
         if (isDead) return;
 
+        if (isInvulnerable)
+        {
+            Debug.Log("Dano ignorado (invulnerável durante o dash).");
+            return;
+        }
+
         playerHealth -= damage;
         Debug.Log($"Jogador tomou {damage} de dano! Vida: {playerHealth}");
 
-        // Se tomar dano, reseta o multiplicador para 1x
         currentDamageMultiplier = 1;
 
         if (playerHealth <= 0)
@@ -116,12 +151,11 @@ public class PlayerCombat : MonoBehaviour
     void Die()
     {
         isDead = true;
-        animator.SetTrigger("Die"); // Ativa a animação de morte
+        animator.SetTrigger("Die");
         Debug.Log("Player morreu!");
 
-        // Desativa o controle do jogador (opcional)
         GetComponent<CharacterController>().enabled = false;
-        this.enabled = false; // Desativa o script após a morte
+        this.enabled = false;
     }
 
     void OnDrawGizmosSelected()
@@ -129,5 +163,72 @@ public class PlayerCombat : MonoBehaviour
         if (attackPoint == null) return;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
+    }
+
+    GameObject FindNearestEnemyInRange()
+    {
+        Collider[] enemies = Physics.OverlapSphere(transform.position, dashRange, enemyLayer);
+        GameObject closestEnemy = null;
+        float closestDistance = Mathf.Infinity;
+
+        foreach (Collider enemy in enemies)
+        {
+            float dist = Vector3.Distance(transform.position, enemy.transform.position);
+            if (dist < closestDistance)
+            {
+                closestDistance = dist;
+                closestEnemy = enemy.gameObject;
+            }
+        }
+
+        return closestEnemy;
+    }
+
+    IEnumerator ExecuteDash(Transform target)
+    {
+        isDashing = true;
+        isInvulnerable = true;
+        lastDashTime = Time.time;
+
+        Vector3 start = transform.position;
+        Vector3 end = target.position;
+
+        float dashDuration = Vector3.Distance(start, end) / dashSpeed;
+        float elapsed = 0f;
+
+        musicTime = musicSource.time; // Pega o tempo no momento que começa o dash
+        float beatDistance = Mathf.Min((musicTime / perfectAttackTime) % 1f, 1f - ((musicTime / perfectAttackTime) % 1f));
+        Debug.Log($"Beat Distance (Dash): {beatDistance}");
+
+        while (elapsed < dashDuration)
+        {
+            transform.position = Vector3.Lerp(start, end, elapsed / dashDuration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = end;
+        Debug.Log("Dash finalizado. Causando dano...");
+
+        EnemyAI enemy = target.GetComponent<EnemyAI>();
+        if (enemy != null)
+        {
+            int finalDamage = baseDamage * currentDamageMultiplier;
+            Vector3 knockbackDir = (target.position - transform.position).normalized;
+            enemy.TakeDamage(finalDamage, knockbackDir, enemy.knockbackForce);
+
+            Debug.Log($"Dano de dash aplicado: {finalDamage}");
+
+            if (beatDistance <= timeMargin)
+            {
+                currentDamageMultiplier = Mathf.Min(currentDamageMultiplier * 2, maxMultiplier);
+            }
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        isInvulnerable = false;
+        isDashing = false;
+
+        Debug.Log("Jogador não está mais invulnerável.");
     }
 }
