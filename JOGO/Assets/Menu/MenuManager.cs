@@ -8,8 +8,9 @@ public class MenuManager : MonoBehaviour
 	[SerializeField] private string nomeDoLevelDeJogo;
 	[SerializeField] private GameObject painelMenuInicial;
 	[SerializeField] private GameObject painelOpcoes;
+    public GameObject creditsMenuUI;
 
-public void Play()
+    public void Play()
 {
 	SceneManager.LoadScene(nomeDoLevelDeJogo);
 }
@@ -26,9 +27,21 @@ public void CloseOptions()
 	painelMenuInicial.SetActive(true);
 }
 
-public void CloseGame()
+    public void OpenCredits()
+    {
+        painelMenuInicial.SetActive(false);
+        creditsMenuUI.SetActive(true);
+    }
+
+    public void CloseCredits()
+    {
+        creditsMenuUI.SetActive(false);
+        painelMenuInicial.SetActive(true);
+    }
+
+    public void CloseGame()
 {
-	Debug.Log("Sair do Jogo");
+	Debug.Log("Saiu do Jogo");
 	Application.Quit();
 }
 

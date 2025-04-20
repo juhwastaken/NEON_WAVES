@@ -5042,7 +5042,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 588904025}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.021521134, y: -0.0000000010751501, z: -2.3143812e-11, w: 0.99976844}
+  m_LocalRotation: {x: -0.02152113, y: 0.0000000010751494, z: 2.314379e-11, w: 0.99976844}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -13756,6 +13756,52 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -4056780123643941983, guid: 6dd2c3206c8fdec48aec832ef3218cba, type: 3}
+--- !u!1 &1702888526
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1702888528}
+  - component: {fileID: 1702888527}
+  m_Layer: 0
+  m_Name: PauseUILoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1702888527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702888526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9093b0be2e916794f9d3dbd8074dd856, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseCanvasPrefab: {fileID: 3683950151543403761, guid: 0f3d29ae85b757549bf77f7e7c8bca98,
+    type: 3}
+--- !u!4 &1702888528
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702888526}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1710092461
 GameObject:
   m_ObjectHideFlags: 0
@@ -24424,6 +24470,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1702888528}
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 330585546}
