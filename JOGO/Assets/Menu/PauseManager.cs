@@ -3,90 +3,84 @@ using UnityEngine.SceneManagement;
 
 public class PauseManager : MonoBehaviour
 {
-    public GameObject pauseMenuUI;       // Painel principal do menu de pausa
-    public GameObject optionsMenuUI;     // Menu de opções já existente (em outro canvas)
-    public static PauseManager Instance;
+    public GameObject pausePanel;
+    public GameObject optionsPanel;
+    public string mainMenuSceneName = "MainMenu";  // Nome da cena do menu principal
 
     private bool isPaused = false;
-    public bool ready = false;
-
-    void Awake()
-    {
-        Instance = this;
-        transform.SetParent(null);
-        DontDestroyOnLoad(gameObject);
-    }
-
-
-
-    void Update()
-    {
-        if (!ready) return; // Aguarda o UI ser carregado
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Debug.Log("ESC pressionado");
-            if (isPaused)
-                Resume();
-            else
-                Pause();
-        }
-    }
-
-
-    public void Resume()
-    {
-        pauseMenuUI.SetActive(false);
-        optionsMenuUI.SetActive(false); // Garante que o menu de opções seja fechado
-        Time.timeScale = 1f;
-        isPaused = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
-
-    void Pause()
-    {
-        if (pauseMenuUI == null)
-        {
-            Debug.LogError("pauseMenuUI está nulo ao tentar pausar!");
-            return;
-        }
-
-        pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f;
-        isPaused = true;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
-
-    public void Retry()
-    {
-        Time.timeScale = 1f; // Despausa antes de recarregar
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    public void OpenOptions()
-    {
-        pauseMenuUI.SetActive(false);
-        optionsMenuUI.SetActive(true);
-    }
-
-    public void CloseOptions()
-    {
-        optionsMenuUI.SetActive(false);
-        pauseMenuUI.SetActive(true);
-    }
-
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
 
     void Start()
     {
-        Debug.Log("PauseManager ativo na cena!");
-        if (pauseMenuUI == null) Debug.LogWarning("pauseMenuUI está vazio!");
-        if (optionsMenuUI == null) Debug.LogWarning("optionsMenuUI está vazio!");
+        Time.timeScale = 1f;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
+    void Update()
+    {
+        // Verifica se o jogo já começou, baseado no GameState
+        if (!GameState.hasStarted) return;
+
+        // Verifica se o jogador pressionou ESC para pausar ou abrir as opções
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (optionsPanel.activeSelf)
+                BackFromOptions();
+            else
+                TogglePause();
+        }
+    }
+
+    // Função de alternar pausa
+    public void TogglePause()
+    {
+        isPaused = !isPaused;
+
+        // Ativa ou desativa o painel de pausa e ajusta a velocidade do tempo
+        pausePanel.SetActive(isPaused);
+        Time.timeScale = isPaused ? 0f : 1f;
+
+        // Controle do cursor
+        Cursor.visible = isPaused;
+        Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+    }
+
+    // Função para retomar o jogo
+    public void ResumeGame()
+    {
+        isPaused = false;
+        pausePanel.SetActive(false);
+        Time.timeScale = 1f;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    // Função para reiniciar o nível
+    public void RetryLevel()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    // Função para abrir o painel de opções
+    public void OpenOptions()
+    {
+        pausePanel.SetActive(false);
+        optionsPanel.SetActive(true);
+    }
+
+    // Função para voltar do painel de opções
+    public void BackFromOptions()
+    {
+        optionsPanel.SetActive(false);
+        pausePanel.SetActive(true);
+    }
+
+    // Função para voltar ao menu principal
+    public void QuitToMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(mainMenuSceneName);
+    }
 }
