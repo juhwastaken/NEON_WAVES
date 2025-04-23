@@ -23,6 +23,10 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
+        // Sensitivity pode ter valor quebrado, volume não
+        sensitivitySlider.wholeNumbers = false;
+        volumeSlider.wholeNumbers = true;
+
         // Ativa só o menu principal ao iniciar
         mainMenuPanel.SetActive(true);
         optionsPanel.SetActive(false);
@@ -31,17 +35,21 @@ public class MainMenuManager : MonoBehaviour
         gameplayElements.SetActive(false);
         player.SetActive(false);
 
-        // Carrega configurações salvas
+        // Carrega configurações
         float savedSensitivity = PlayerPrefs.GetFloat("Sensitivity", 1.0f);
-        float savedVolume = PlayerPrefs.GetFloat("Volume", 1.0f);
+        int savedVolume = PlayerPrefs.GetInt("Volume", 100);
 
         sensitivitySlider.value = savedSensitivity;
         volumeSlider.value = savedVolume;
+        AudioListener.volume = savedVolume / 100f;
 
+        // Atualiza textos
         UpdateSensitivityUI(savedSensitivity);
         UpdateVolumeUI(savedVolume);
 
-        AudioListener.volume = savedVolume;
+        // Adiciona listeners
+        sensitivitySlider.onValueChanged.AddListener(UpdateSensitivityUI);
+        volumeSlider.onValueChanged.AddListener((value) => UpdateVolumeUI((int)value));
     }
 
     // -------------------- Menu Principal --------------------
@@ -68,7 +76,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void CloseOptions()
     {
-        SaveSettings(); // Salva ao fechar as opções
+        SaveSettings();
         optionsPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
     }
@@ -81,7 +89,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void ExitGame()
     {
-        SaveSettings(); // Salva ao sair do jogo
+        SaveSettings();
         Debug.Log("Saindo do jogo...");
         Application.Quit();
 #if UNITY_EDITOR
@@ -91,49 +99,38 @@ public class MainMenuManager : MonoBehaviour
 
     // -------------------- Configurações --------------------
 
-    public void OnSensitivityChanged(float value)
-    {
-        UpdateSensitivityUI(value);
-    }
-
-    public void OnVolumeChanged(float value)
-    {
-        UpdateVolumeUI(value);
-        AudioListener.volume = value;
-    }
-
     private void UpdateSensitivityUI(float value)
     {
         if (sensitivityValueText != null)
         {
-            sensitivityValueText.text = value.ToString("F2");
-            sensitivityValueText.ForceMeshUpdate();
+            sensitivityValueText.text = value.ToString("F2"); // Ex: 2.45
         }
         else
         {
-            Debug.LogWarning("Campo 'sensitivityValueText' não está atribuído no Inspector.");
+            Debug.LogWarning("Campo 'sensitivityValueText' não está atribuído.");
         }
     }
 
-    private void UpdateVolumeUI(float value)
+    private void UpdateVolumeUI(int value)
     {
         if (volumeValueText != null)
         {
-            volumeValueText.text = Mathf.RoundToInt(value * 100f) + "%";
-            volumeValueText.ForceMeshUpdate();
+            volumeValueText.text = $"{value}%"; // Ex: 75%
         }
         else
         {
-            Debug.LogWarning("Campo 'volumeValueText' não está atribuído no Inspector.");
+            Debug.LogWarning("Campo 'volumeValueText' não está atribuído.");
         }
+
+        AudioListener.volume = value / 100f;
     }
 
     private void SaveSettings()
     {
         PlayerPrefs.SetFloat("Sensitivity", sensitivitySlider.value);
-        PlayerPrefs.SetFloat("Volume", volumeSlider.value);
+        PlayerPrefs.SetInt("Volume", (int)volumeSlider.value);
         PlayerPrefs.Save();
-        Debug.Log("Configurações salvas automaticamente.");
+        Debug.Log("Configurações salvas.");
     }
 
     private void OnApplicationQuit()
