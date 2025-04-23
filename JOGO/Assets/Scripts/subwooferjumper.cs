@@ -14,7 +14,7 @@ public class subwooferjumper : MonoBehaviour
         if (hit.gameObject.CompareTag("subwoofer"))
         {
             Debug.Log("Colidiu com: " + hit.gameObject.name);
-            movimentoJogador.AplicarImpulsoVertical(10f); // Impulso vertical desejado
+            movimentoJogador.AplicarImpulsoVertical(20f); // Impulso vertical desejado
         }
     }
 }
