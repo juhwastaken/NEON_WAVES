@@ -5,16 +5,17 @@ TagManager:
   serializedVersion: 2
   tags:
   - Terreno
+  - subwoofer
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Subwoofer
   - Water
   - UI
-  - "Ch\xE3o"
-  - 
-  - 
+  - Chao
+  - Jogador
+  - Inimigo
   - 
   - 
   - 

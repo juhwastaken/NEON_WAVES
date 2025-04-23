@@ -22,6 +22,9 @@ public class MovimentoJogador : MonoBehaviour
         controller = GetComponent<CharacterController>();
         myCamera = Camera.main.transform;
         animator = GetComponent<Animator>();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void Update()
@@ -72,4 +75,13 @@ public class MovimentoJogador : MonoBehaviour
 
         controller.Move(new Vector3(0, forcaY, 0) * Time.deltaTime);
     }
+
+    public void AplicarImpulsoVertical(float impulso)
+    {
+        forcaY = impulso;
+        animator.SetTrigger("Saltar");
+    }
+
+
+
 }
