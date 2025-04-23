@@ -1,86 +1,99 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PauseManager : MonoBehaviour
+public class PauseMenu : MonoBehaviour
 {
+    [Header("Referências")]
     public GameObject pausePanel;
     public GameObject optionsPanel;
-    public string mainMenuSceneName = "MainMenu";  // Nome da cena do menu principal
+    public GameObject mainMenuPanel;
+    public GameObject gameUI;
+    public GameObject gameplayElements;
+    public GameObject player;
 
     private bool isPaused = false;
 
-    void Start()
+    private void Start()
     {
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
         Time.timeScale = 1f;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
-    void Update()
+    private void Update()
     {
-        // Verifica se o jogo já começou, baseado no GameState
-        if (!GameState.hasStarted) return;
-
-        // Verifica se o jogador pressionou ESC para pausar ou abrir as opções
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && player.activeSelf)
         {
-            if (optionsPanel.activeSelf)
-                BackFromOptions();
+            if (optionsPanel != null && optionsPanel.activeSelf)
+            {
+                CloseOptions();
+                return;
+            }
+
+            if (isPaused)
+                ResumeGame();
             else
-                TogglePause();
+                PauseGame();
         }
     }
 
-    // Função de alternar pausa
-    public void TogglePause()
+    public void PauseGame()
     {
-        isPaused = !isPaused;
+        isPaused = true;
+        Time.timeScale = 0f;
 
-        // Ativa ou desativa o painel de pausa e ajusta a velocidade do tempo
-        pausePanel.SetActive(isPaused);
-        Time.timeScale = isPaused ? 0f : 1f;
+        if (pausePanel != null)
+            pausePanel.SetActive(true);
 
-        // Controle do cursor
-        Cursor.visible = isPaused;
-        Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+        if (gameUI != null)
+            gameUI.SetActive(false);
+
+        Debug.Log("Jogo pausado");
     }
 
-    // Função para retomar o jogo
     public void ResumeGame()
     {
         isPaused = false;
-        pausePanel.SetActive(false);
         Time.timeScale = 1f;
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        if (gameUI != null)
+            gameUI.SetActive(true);
+
+        Debug.Log("Jogo retomado");
     }
 
-    // Função para reiniciar o nível
-    public void RetryLevel()
+    public void RetryGame()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // Função para abrir o painel de opções
     public void OpenOptions()
     {
-        pausePanel.SetActive(false);
-        optionsPanel.SetActive(true);
+        if (pausePanel != null) pausePanel.SetActive(false);
+        if (optionsPanel != null) optionsPanel.SetActive(true);
     }
 
-    // Função para voltar do painel de opções
-    public void BackFromOptions()
+    public void CloseOptions()
     {
-        optionsPanel.SetActive(false);
-        pausePanel.SetActive(true);
+        if (optionsPanel != null) optionsPanel.SetActive(false);
+        if (pausePanel != null) pausePanel.SetActive(true);
     }
 
-    // Função para voltar ao menu principal
-    public void QuitToMainMenu()
+    public void ExitToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(mainMenuSceneName);
+        isPaused = false;
+
+        if (pausePanel != null) pausePanel.SetActive(false);
+        if (optionsPanel != null) optionsPanel.SetActive(false);
+        if (gameUI != null) gameUI.SetActive(false);
+        if (gameplayElements != null) gameplayElements.SetActive(false);
+        if (player != null) player.SetActive(false);
+        if (mainMenuPanel != null) mainMenuPanel.SetActive(true);
     }
 }

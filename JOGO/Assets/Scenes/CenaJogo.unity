@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0040148, g: 0.0042337226, b: 0.0044871187, a: 1}
+  m_IndirectSpecularColor: {r: 0.0040169233, g: 0.0042347163, b: 0.0044871443, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1681,7 +1681,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 206738453}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0100326175, y: -0.00000001714701, z: 1.7203802e-10, w: 0.9999497}
+  m_LocalRotation: {x: 0.010032619, y: 0.00000001734813, z: -1.7405595e-10, w: 0.9999497}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1760,8 +1760,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 220139622}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.041831084, y: 0.000000029776238, z: -0.0000000012466636,
-    w: 0.9991247}
+  m_LocalRotation: {x: 0.041831102, y: -0.00000001784719, z: 7.4722156e-10, w: 0.9991247}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1879,9 +1878,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 381989310}
+      - m_Target: {fileID: 381989312}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: OnBackToMainMenu
+        m_MethodName: CloseOptions
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2781,8 +2780,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.01003262, y: -0.000000034495137, z: 3.4609404e-10, w: 0.9999497}
-  m_LocalPosition: {x: -1.1048584, y: 12.782013, z: -23.687845}
+  m_LocalRotation: {x: 0.010032624, y: 0.000000034495137, z: -3.4609415e-10, w: 0.9999497}
+  m_LocalPosition: {x: -73.10486, y: 32.282013, z: -23.687845}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3005,8 +3004,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 654460594}
-        m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
-        m_MethodName: RetryLevel
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: RetryGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3579,7 +3578,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 381989311}
-  - component: {fileID: 381989310}
+  - component: {fileID: 381989312}
   m_Layer: 0
   m_Name: MainMenuManager
   m_TagString: Untagged
@@ -3587,28 +3586,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &381989310
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 381989309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0d60dab9fe6f0c43a56d15a1f801616, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainMenuPanel: {fileID: 1594995874}
-  optionsPanel: {fileID: 2123965198}
-  creditsPanel: {fileID: 801012320}
-  sensitivitySlider: {fileID: 1436337780}
-  volumeSlider: {fileID: 1423340133}
-  sensitivityValueText: {fileID: 895060479}
-  volumeValueText: {fileID: 56692556}
-  player: {fileID: 505188787}
-  gameplayUI: {fileID: 2052203127}
-  menuCamera: {fileID: 330585543}
 --- !u!4 &381989311
 Transform:
   m_ObjectHideFlags: 0
@@ -3623,8 +3600,31 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1017352440}
+  - {fileID: 1232941615}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &381989312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 381989309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0d60dab9fe6f0c43a56d15a1f801616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainMenuPanel: {fileID: 1594995874}
+  optionsPanel: {fileID: 2123965198}
+  creditsPanel: {fileID: 801012320}
+  gameUI: {fileID: 1232941614}
+  gameplayElements: {fileID: 2052203127}
+  player: {fileID: 505188787}
+  sensitivitySlider: {fileID: 1436337780}
+  SensitivityValueText: {fileID: 895060479}
+  volumeSlider: {fileID: 1423340133}
+  VolumeValueText: {fileID: 56692556}
 --- !u!1 &402117138 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7374247428904772577, guid: 6dd2c3206c8fdec48aec832ef3218cba,
@@ -5500,9 +5500,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 381989310}
+      - m_Target: {fileID: 381989312}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: OnOptionsButton
+        m_MethodName: OpenOptions
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5801,7 +5801,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 654460594}
-        m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
         m_MethodName: OpenOptions
         m_Mode: 1
         m_Arguments:
@@ -6419,7 +6419,7 @@ GameObject:
   - component: {fileID: 654460590}
   - component: {fileID: 654460594}
   m_Layer: 5
-  m_Name: PauseMenuCanvas
+  m_Name: PauseMenuManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6521,8 +6521,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pausePanel: {fileID: 2005267807}
-  optionsPanel: {fileID: 522699214}
-  mainMenuSceneName: MainMenuPanel
+  optionsPanel: {fileID: 2123965198}
+  mainMenuPanel: {fileID: 1594995874}
+  gameUI: {fileID: 1232941614}
+  gameplayElements: {fileID: 2052203127}
+  player: {fileID: 505188787}
 --- !u!1 &655729501 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5332238599137166870, guid: 6dd2c3206c8fdec48aec832ef3218cba,
@@ -7541,9 +7544,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 381989310}
+      - m_Target: {fileID: 381989312}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: OnCreditsButton
+        m_MethodName: OpenCredits
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8195,9 +8198,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 381989310}
+      - m_Target: {fileID: 381989312}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: OnBackFromCredits
+        m_MethodName: CloseCredits
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10873,8 +10876,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 654460594}
-        m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
-        m_MethodName: QuitToMainMenu
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: ExitToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11933,9 +11936,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 381989310}
+      - m_Target: {fileID: 381989312}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: OnStartButton
+        m_MethodName: StartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12429,9 +12432,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 381989310}
+      - m_Target: {fileID: 381989312}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: OnExitButton
+        m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12765,6 +12768,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -3540850596194804248, guid: 6dd2c3206c8fdec48aec832ef3218cba, type: 3}
+--- !u!1 &1232941614
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1232941615}
+  m_Layer: 0
+  m_Name: Gameplay UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1232941615
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232941614}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 136.27817, y: 19.290955, z: -52.54831}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 381989311}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1234801578 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8205322986379795924, guid: 6dd2c3206c8fdec48aec832ef3218cba,
@@ -14189,7 +14223,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 381989310}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
         m_MethodName: SetVolume
         m_Mode: 4
@@ -14319,7 +14353,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 381989310}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
         m_MethodName: SetSensitivity
         m_Mode: 4
@@ -15272,7 +15306,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 654460594}
-        m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
         m_MethodName: ResumeGame
         m_Mode: 1
         m_Arguments:
@@ -15703,7 +15737,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -484, y: -33}
+  m_AnchoredPosition: {x: -433, y: -33}
   m_SizeDelta: {x: 300, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1569953539
@@ -18031,7 +18065,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -295, y: -41}
+  m_AnchoredPosition: {x: -249, y: -41}
   m_SizeDelta: {x: 370.1, y: 197.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1806284514
@@ -20281,7 +20315,7 @@ GameObject:
   - component: {fileID: 2052203129}
   - component: {fileID: 2052203128}
   m_Layer: 5
-  m_Name: GameplayUI
+  m_Name: GameplayElements
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

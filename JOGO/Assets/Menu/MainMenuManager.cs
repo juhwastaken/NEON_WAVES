@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -8,140 +9,108 @@ public class MainMenuManager : MonoBehaviour
     public GameObject mainMenuPanel;
     public GameObject optionsPanel;
     public GameObject creditsPanel;
+    public GameObject gameUI;
 
-    [Header("Sliders de Opções")]
-    public Slider sensitivitySlider;
-    public Slider volumeSlider;
-    public TMP_Text sensitivityValueText;
-    public TMP_Text volumeValueText;
-
-    [Header("Objetos do jogo")]
+    [Header("Gameplay")]
+    public GameObject gameplayElements;
     public GameObject player;
-    public GameObject gameplayUI;
-    public GameObject menuCamera;
 
-    private float defaultSensitivity = 1f;
-    private float defaultVolume = 1f;
+    [Header("Options (Sliders e Textos)")]
+    public Slider sensitivitySlider;
+    public TextMeshProUGUI SensitivityValueText;
+    public Slider volumeSlider;
+    public TextMeshProUGUI VolumeValueText;
 
     void Start()
     {
+        // Ativa só o menu principal ao iniciar
         mainMenuPanel.SetActive(true);
         optionsPanel.SetActive(false);
         creditsPanel.SetActive(false);
+        gameUI.SetActive(false);
+        gameplayElements.SetActive(false);
+        player.SetActive(false);
 
-        if (player != null) player.SetActive(false);
-        if (gameplayUI != null) gameplayUI.SetActive(false);
+        // Carrega configurações salvas
+        float savedSensitivity = PlayerPrefs.GetFloat("Sensitivity", 1.0f);
+        float savedVolume = PlayerPrefs.GetFloat("Volume", 1.0f);
 
-        Time.timeScale = 1f;
+        sensitivitySlider.value = savedSensitivity;
+        volumeSlider.value = savedVolume;
 
-        // Carregar os valores salvos do PlayerPrefs
-        if (sensitivitySlider != null)
-        {
-            float sensitivity = PlayerPrefs.GetFloat("Sensitivity", defaultSensitivity);
-            sensitivitySlider.value = sensitivity;
-            sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
-            UpdateSensitivityText(sensitivity);
-        }
+        UpdateSensitivityUI(savedSensitivity);
+        UpdateVolumeUI(savedVolume);
 
-        if (volumeSlider != null)
-        {
-            float volume = PlayerPrefs.GetFloat("Volume", defaultVolume);
-            volumeSlider.value = volume;
-            volumeSlider.onValueChanged.AddListener(SetVolume);
-            UpdateVolumeText(volume);
-        }
+        AudioListener.volume = savedVolume;
     }
 
-    public void OnStartButton()
+    // -------------------- Menu Principal --------------------
+
+    public void StartGame()
     {
-        Debug.Log("Botão Start pressionado.");
-
-        // Certifique-se de que o menu principal está sendo desativado
-        if (mainMenuPanel != null) mainMenuPanel.SetActive(false);
-
-        // Desative a câmera do menu, pois o jogador precisa da câmera do jogo
-        if (menuCamera != null) menuCamera.SetActive(false);
-
-        // Ative o jogador e a UI do gameplay
-        if (player != null) player.SetActive(true);
-        if (gameplayUI != null) gameplayUI.SetActive(true);
-
-        // Altere o tempo do jogo para o valor normal
-        Time.timeScale = 1f;
-
-        // Controle do cursor: desative o cursor no início do jogo
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
-        // Atualize o estado do jogo para indicar que começou
-        GameState.hasStarted = true;
-
-        Debug.Log("Jogo iniciado com sucesso!");
+        mainMenuPanel.SetActive(false);
+        gameUI.SetActive(true);
+        gameplayElements.SetActive(true);
+        player.SetActive(true);
     }
 
-    // Função para abrir o painel de opções
-    public void OnOptionsButton()
+    public void OpenOptions()
     {
         mainMenuPanel.SetActive(false);
         optionsPanel.SetActive(true);
     }
 
-    // Função para abrir o painel de créditos
-    public void OnCreditsButton()
+    public void OpenCredits()
     {
         mainMenuPanel.SetActive(false);
         creditsPanel.SetActive(true);
     }
 
-    // Função de voltar para o menu principal
-    public void OnBackToMainMenu()
+    public void CloseOptions()
     {
         optionsPanel.SetActive(false);
+        mainMenuPanel.SetActive(true);
+    }
+
+    public void CloseCredits()
+    {
         creditsPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
     }
 
-    // Função para sair do jogo
-    public void OnExitButton()
+    public void ExitGame()
     {
         Debug.Log("Saindo do jogo...");
         Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
     }
 
-    // Funções de controle de opções
-    public void SetSensitivity(float value)
+    // -------------------- Configurações --------------------
+
+    public void OnSensitivityChanged(float value)
     {
         PlayerPrefs.SetFloat("Sensitivity", value);
-        PlayerPrefs.Save(); // Garantir que a alteração seja salva imediatamente
-        Debug.Log("Sensibilidade ajustada para: " + value);
-        UpdateSensitivityText(value);
+        UpdateSensitivityUI(value);
     }
 
-    public void SetVolume(float value)
+    public void OnVolumeChanged(float value)
     {
         PlayerPrefs.SetFloat("Volume", value);
+        UpdateVolumeUI(value);
         AudioListener.volume = value;
-        PlayerPrefs.Save(); // Garantir que a alteração seja salva imediatamente
-        Debug.Log("Volume ajustado para: " + value);
-        UpdateVolumeText(value);
     }
 
-    private void UpdateSensitivityText(float value)
+    private void UpdateSensitivityUI(float value)
     {
-        if (sensitivityValueText != null)
-            sensitivityValueText.text = value.ToString("F1");
+        if (SensitivityValueText != null)
+            SensitivityValueText.text = value.ToString("F2");
     }
 
-    private void UpdateVolumeText(float value)
+    private void UpdateVolumeUI(float value)
     {
-        if (volumeValueText != null)
-            volumeValueText.text = value.ToString("F1");
-    }
-
-    // Novo método para botão de voltar no painel de créditos
-    public void OnBackFromCredits()
-    {
-        creditsPanel.SetActive(false);
-        mainMenuPanel.SetActive(true);
+        if (VolumeValueText != null)
+            VolumeValueText.text = Mathf.RoundToInt(value * 100f) + "%";
     }
 }
