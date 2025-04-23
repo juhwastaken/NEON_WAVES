@@ -17,9 +17,9 @@ public class MainMenuManager : MonoBehaviour
 
     [Header("Options (Sliders e Textos)")]
     public Slider sensitivitySlider;
-    public TextMeshProUGUI sensitivityValueText;
+    public TextMeshProUGUI SensitivityValueText;
     public Slider volumeSlider;
-    public TextMeshProUGUI volumeValueText;
+    public TextMeshProUGUI VolumeValueText;
 
     void Start()
     {
@@ -68,7 +68,6 @@ public class MainMenuManager : MonoBehaviour
 
     public void CloseOptions()
     {
-        SaveSettings(); // Salva ao fechar as opções
         optionsPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
     }
@@ -81,7 +80,6 @@ public class MainMenuManager : MonoBehaviour
 
     public void ExitGame()
     {
-        SaveSettings(); // Salva ao sair do jogo
         Debug.Log("Saindo do jogo...");
         Application.Quit();
 #if UNITY_EDITOR
@@ -93,51 +91,26 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnSensitivityChanged(float value)
     {
+        PlayerPrefs.SetFloat("Sensitivity", value);
         UpdateSensitivityUI(value);
     }
 
     public void OnVolumeChanged(float value)
     {
+        PlayerPrefs.SetFloat("Volume", value);
         UpdateVolumeUI(value);
         AudioListener.volume = value;
     }
 
     private void UpdateSensitivityUI(float value)
     {
-        if (sensitivityValueText != null)
-        {
-            sensitivityValueText.text = value.ToString("F2");
-            sensitivityValueText.ForceMeshUpdate();
-        }
-        else
-        {
-            Debug.LogWarning("Campo 'sensitivityValueText' não está atribuído no Inspector.");
-        }
+        if (SensitivityValueText != null)
+            SensitivityValueText.text = value.ToString("F2");
     }
 
     private void UpdateVolumeUI(float value)
     {
-        if (volumeValueText != null)
-        {
-            volumeValueText.text = Mathf.RoundToInt(value * 100f) + "%";
-            volumeValueText.ForceMeshUpdate();
-        }
-        else
-        {
-            Debug.LogWarning("Campo 'volumeValueText' não está atribuído no Inspector.");
-        }
-    }
-
-    private void SaveSettings()
-    {
-        PlayerPrefs.SetFloat("Sensitivity", sensitivitySlider.value);
-        PlayerPrefs.SetFloat("Volume", volumeSlider.value);
-        PlayerPrefs.Save();
-        Debug.Log("Configurações salvas automaticamente.");
-    }
-
-    private void OnApplicationQuit()
-    {
-        SaveSettings();
+        if (VolumeValueText != null)
+            VolumeValueText.text = Mathf.RoundToInt(value * 100f) + "%";
     }
 }
