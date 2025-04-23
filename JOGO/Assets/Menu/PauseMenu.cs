@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems; // Certifique-se de ter isso!
 
-public class PauseMenu : MonoBehaviour
+public class PauseManager : MonoBehaviour
 {
     [Header("Referências")]
     public GameObject pausePanel;
@@ -19,6 +20,12 @@ public class PauseMenu : MonoBehaviour
             pausePanel.SetActive(false);
 
         Time.timeScale = 1f;
+
+        // Garante que o EventSystem está ativo
+        if (EventSystem.current == null)
+        {
+            Debug.LogWarning("Não há EventSystem na cena. Os botões não vão funcionar!");
+        }
     }
 
     private void Update()
@@ -49,6 +56,10 @@ public class PauseMenu : MonoBehaviour
         if (gameUI != null)
             gameUI.SetActive(false);
 
+        // Libera o cursor para usar os botões
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         Debug.Log("Jogo pausado");
     }
 
@@ -62,6 +73,10 @@ public class PauseMenu : MonoBehaviour
 
         if (gameUI != null)
             gameUI.SetActive(true);
+
+        // Trava o cursor novamente
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         Debug.Log("Jogo retomado");
     }
