@@ -14,8 +14,8 @@ public class MovimentoJogador : MonoBehaviour
     [SerializeField] private LayerMask colisaoLayer;
 
     private float forcaY;
-    private float forcaPulo = 7f; // Intensidade do pulo
-    private float gravidade = -9.81f;
+    private float forcaPulo = 6f; // Intensidade do pulo
+    private float gravidade = -15f;
 
     void Start()
     {
@@ -54,7 +54,7 @@ public class MovimentoJogador : MonoBehaviour
 
         animator.SetBool("EstaNoChao", estaNoChao);
 
-        // Lógica do Pulo
+        // Lï¿½gica do Pulo
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (estaNoChao)
@@ -65,12 +65,12 @@ public class MovimentoJogador : MonoBehaviour
             else if (podePularNovamente) // Pulo duplo
             {
                 forcaY = forcaPulo;
-                podePularNovamente = false; // Impede outro pulo duplo até tocar o chão
+                podePularNovamente = false; // Impede outro pulo duplo atï¿½ tocar o chï¿½o
                 animator.SetTrigger("Saltar");
             }
         }
 
-        // Aplicação da gravidade
+        // Aplicaï¿½ï¿½o da gravidade
         forcaY += gravidade * Time.deltaTime;
 
         controller.Move(new Vector3(0, forcaY, 0) * Time.deltaTime);
