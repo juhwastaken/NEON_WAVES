@@ -13,9 +13,9 @@ public class MovimentoJogador : MonoBehaviour
     [SerializeField] private Transform peDoPersonagem;
     [SerializeField] private LayerMask colisaoLayer;
 
-    private float forcaY;
-    private float forcaPulo = 6f; // Intensidade do pulo
-    private float gravidade = -15f;
+    private float velocidadeVertical;
+    private float forcaPulo = 12f;     // Intensidade do pulo
+    private float gravidade = -30f;    // Gravidade aplicada no Player
 
     void Start()
     {
@@ -36,52 +36,51 @@ public class MovimentoJogador : MonoBehaviour
         movimento = myCamera.TransformDirection(movimento);
         movimento.y = 0;
 
-        controller.Move(movimento * Time.deltaTime * 5);
+        controller.Move(movimento * Time.deltaTime * 7f);
 
         if (movimento != Vector3.zero)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movimento), Time.deltaTime * 10);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movimento), Time.deltaTime * 10f);
         }
 
         animator.SetBool("Sprint", movimento != Vector3.zero);
 
         estaNoChao = Physics.CheckSphere(peDoPersonagem.position, 0.3f, colisaoLayer);
 
-        if (estaNoChao)
+        if (estaNoChao && velocidadeVertical < 0)
         {
-            podePularNovamente = true; // Reseta a capacidade de pular novamente
+            velocidadeVertical = -2f; // Evita teleportar para o chão
+            podePularNovamente = true;
         }
 
         animator.SetBool("EstaNoChao", estaNoChao);
 
-        // L�gica do Pulo
+        // Pulo simples e duplo
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (estaNoChao)
             {
-                forcaY = forcaPulo;
+                velocidadeVertical = forcaPulo;
                 animator.SetTrigger("Saltar");
             }
-            else if (podePularNovamente) // Pulo duplo
+            else if (podePularNovamente)
             {
-                forcaY = forcaPulo;
-                podePularNovamente = false; // Impede outro pulo duplo at� tocar o ch�o
+                velocidadeVertical = forcaPulo;
+                podePularNovamente = false;
                 animator.SetTrigger("Saltar");
             }
         }
 
-        // Aplica��o da gravidade
-        forcaY += gravidade * Time.deltaTime;
+        // Aplica gravidade
+        velocidadeVertical += gravidade * Time.deltaTime;
 
-        controller.Move(new Vector3(0, forcaY, 0) * Time.deltaTime);
+        // Aplica movimento vertical
+        controller.Move(new Vector3(0, velocidadeVertical, 0) * Time.deltaTime);
     }
 
     public void AplicarImpulsoVertical(float impulso)
     {
-        forcaY = impulso;
+        velocidadeVertical = impulso;
         animator.SetTrigger("Saltar");
     }
-
-
-
 }
