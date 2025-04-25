@@ -41,15 +41,30 @@ public class MainMenuManager : MonoBehaviour
 
         sensitivitySlider.value = savedSensitivity;
         volumeSlider.value = savedVolume;
-        AudioListener.volume = savedVolume / 100f;
+
+        // Aplica valores
+        ApplySensitivity(savedSensitivity);
+        ApplyVolume(savedVolume);
 
         // Atualiza textos
         UpdateSensitivityUI(savedSensitivity);
         UpdateVolumeUI(savedVolume);
 
-        // Adiciona listeners
-        sensitivitySlider.onValueChanged.AddListener(UpdateSensitivityUI);
-        volumeSlider.onValueChanged.AddListener((value) => UpdateVolumeUI((int)value));
+        // Listeners com salvamento e aplicação
+        sensitivitySlider.onValueChanged.AddListener((value) =>
+        {
+            UpdateSensitivityUI(value);
+            SaveSensitivity(value);
+            ApplySensitivity(value);
+        });
+
+        volumeSlider.onValueChanged.AddListener((value) =>
+        {
+            int intValue = (int)value;
+            UpdateVolumeUI(intValue);
+            SaveVolume(intValue);
+            ApplyVolume(intValue);
+        });
     }
 
     // -------------------- Menu Principal --------------------
@@ -60,6 +75,10 @@ public class MainMenuManager : MonoBehaviour
         gameUI.SetActive(true);
         gameplayElements.SetActive(true);
         player.SetActive(true);
+
+        // Garante aplicação dos valores ao iniciar o gameplay
+        ApplySensitivity(sensitivitySlider.value);
+        ApplyVolume((int)volumeSlider.value);
     }
 
     public void OpenOptions()
@@ -76,7 +95,6 @@ public class MainMenuManager : MonoBehaviour
 
     public void CloseOptions()
     {
-        SaveSettings();
         optionsPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
     }
@@ -89,7 +107,6 @@ public class MainMenuManager : MonoBehaviour
 
     public void ExitGame()
     {
-        SaveSettings();
         Debug.Log("Saindo do jogo...");
         Application.Quit();
 #if UNITY_EDITOR
@@ -99,11 +116,11 @@ public class MainMenuManager : MonoBehaviour
 
     // -------------------- Configurações --------------------
 
-    private void UpdateSensitivityUI(float value)
+    public void UpdateSensitivityUI(float value)
     {
         if (sensitivityValueText != null)
         {
-            sensitivityValueText.text = value.ToString("F2"); // Ex: 2.45
+            sensitivityValueText.text = value.ToString("F2"); // Ex: 1.25
         }
         else
         {
@@ -111,7 +128,7 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    private void UpdateVolumeUI(int value)
+    public void UpdateVolumeUI(int value)
     {
         if (volumeValueText != null)
         {
@@ -121,20 +138,42 @@ public class MainMenuManager : MonoBehaviour
         {
             Debug.LogWarning("Campo 'volumeValueText' não está atribuído.");
         }
+    }
 
+    public void SaveSensitivity(float value)
+    {
+        PlayerPrefs.SetFloat("Sensitivity", value);
+        PlayerPrefs.Save();
+    }
+
+    public void ApplySensitivity(float value)
+    {
+        // Aplica a sensibilidade no script PlayerCamera
+        var camera = Camera.main;
+        if (camera != null)
+        {
+            var playerCameraScript = camera.GetComponent<PlayerCamera>();
+            if (playerCameraScript != null)
+            {
+                playerCameraScript.mouseSensitivity = value * 100f; // Escala para valores esperados
+            }
+        }
+    }
+
+    public void SaveVolume(int value)
+    {
+        PlayerPrefs.SetInt("Volume", value);
+        PlayerPrefs.Save();
+    }
+
+    public void ApplyVolume(int value)
+    {
         AudioListener.volume = value / 100f;
     }
 
-    private void SaveSettings()
+    public void OnApplicationQuit()
     {
-        PlayerPrefs.SetFloat("Sensitivity", sensitivitySlider.value);
-        PlayerPrefs.SetInt("Volume", (int)volumeSlider.value);
-        PlayerPrefs.Save();
-        Debug.Log("Configurações salvas.");
-    }
-
-    private void OnApplicationQuit()
-    {
-        SaveSettings();
+        SaveSensitivity(sensitivitySlider.value);
+        SaveVolume((int)volumeSlider.value);
     }
 }

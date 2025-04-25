@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    [Header("Referências")]
+    [Header("Referências UI e Gameplay")]
     public GameObject pausePanel;
     public GameObject optionsPanel;
     public GameObject mainMenuPanel;
@@ -11,19 +11,37 @@ public class PauseMenu : MonoBehaviour
     public GameObject gameplayElements;
     public GameObject player;
 
+    [Header("Música")]
+    public AudioSource musicAudioSource; // Arraste aqui o AudioSource da música no Inspetor
+
     private bool isPaused = false;
+    private MainMenuManager mainMenuManager;
 
     private void Start()
     {
         if (pausePanel != null)
             pausePanel.SetActive(false);
+        else
+            Debug.LogWarning("pausePanel não está atribuído no Inspetor!");
 
         Time.timeScale = 1f;
+
+        // Encontra automaticamente o MainMenuManager na cena
+        mainMenuManager = FindObjectOfType<MainMenuManager>();
+        if (mainMenuManager == null)
+        {
+            Debug.LogWarning("MainMenuManager não encontrado na cena!");
+        }
+
+        if (musicAudioSource == null)
+        {
+            Debug.LogWarning("musicAudioSource não está atribuído! A música não será pausada.");
+        }
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && player.activeSelf)
+        if (Input.GetKeyDown(KeyCode.Escape) && player != null && player.activeSelf)
         {
             if (optionsPanel != null && optionsPanel.activeSelf)
             {
@@ -49,6 +67,9 @@ public class PauseMenu : MonoBehaviour
         if (gameUI != null)
             gameUI.SetActive(false);
 
+        if (musicAudioSource != null)
+            musicAudioSource.Pause();
+
         Debug.Log("Jogo pausado");
     }
 
@@ -63,6 +84,9 @@ public class PauseMenu : MonoBehaviour
         if (gameUI != null)
             gameUI.SetActive(true);
 
+        if (musicAudioSource != null)
+            musicAudioSource.UnPause();
+
         Debug.Log("Jogo retomado");
     }
 
@@ -70,7 +94,6 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        
     }
 
     public void OpenOptions()
@@ -81,6 +104,18 @@ public class PauseMenu : MonoBehaviour
 
     public void CloseOptions()
     {
+        if (mainMenuManager != null)
+        {
+            float sensValue = mainMenuManager.sensitivitySlider.value;
+            int volumeValue = (int)mainMenuManager.volumeSlider.value;
+
+            mainMenuManager.SaveSensitivity(sensValue);
+            mainMenuManager.ApplySensitivity(sensValue);
+
+            mainMenuManager.SaveVolume(volumeValue);
+            mainMenuManager.ApplyVolume(volumeValue);
+        }
+
         if (optionsPanel != null) optionsPanel.SetActive(false);
         if (pausePanel != null) pausePanel.SetActive(true);
     }

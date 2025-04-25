@@ -17,6 +17,11 @@ public class MovimentoJogador : MonoBehaviour
     private float forcaPulo = 12f;     // Intensidade do pulo
     private float gravidade = -30f;    // Gravidade aplicada no Player
 
+    [Header("Referência à tela de Game Over")]
+    public GameOverScreen gameOverScreen; // arraste no Inspector
+
+    private bool jogadorMorto = false;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -29,6 +34,8 @@ public class MovimentoJogador : MonoBehaviour
 
     void Update()
     {
+        if (jogadorMorto) return; // Evita que o jogador se mova depois de morrer
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -76,11 +83,37 @@ public class MovimentoJogador : MonoBehaviour
 
         // Aplica movimento vertical
         controller.Move(new Vector3(0, velocidadeVertical, 0) * Time.deltaTime);
+
+        // 🔥 TESTE: Simula morte ao apertar K
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Debug.Log("Jogador morreu via tecla K");
+            PlayerDeath();
+        }
+
+        // 💀 Morte ao cair do mapa
+        if (transform.position.y < -10f)
+        {
+            Debug.Log("Jogador caiu do mapa");
+            PlayerDeath();
+        }
     }
 
     public void AplicarImpulsoVertical(float impulso)
     {
         velocidadeVertical = impulso;
         animator.SetTrigger("Saltar");
+    }
+
+    public void PlayerDeath()
+    {
+        if (jogadorMorto) return;
+
+        jogadorMorto = true;
+
+        gameOverScreen.ShowGameOver();
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }
