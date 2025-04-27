@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Video;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -12,7 +13,15 @@ public class PauseMenu : MonoBehaviour
     public GameObject player;
 
     [Header("Música")]
-    public AudioSource musicAudioSource; // Arraste aqui o AudioSource da música no Inspetor
+    public AudioSource musicAudioSource;
+
+    [Header("Vídeos da Barra de Vida")]
+    public VideoPlayer healthBarVideoPlayer1;
+    public VideoPlayer healthBarVideoPlayer2;
+
+    [Header("GameObjects da Barra de Vida")] // <<< NOVO
+    public GameObject healthBarObject1;
+    public GameObject healthBarObject2;
 
     private bool isPaused = false;
     private MainMenuManager mainMenuManager;
@@ -26,7 +35,6 @@ public class PauseMenu : MonoBehaviour
 
         Time.timeScale = 1f;
 
-        // Encontra automaticamente o MainMenuManager na cena
         mainMenuManager = FindObjectOfType<MainMenuManager>();
         if (mainMenuManager == null)
         {
@@ -35,7 +43,7 @@ public class PauseMenu : MonoBehaviour
 
         if (musicAudioSource == null)
         {
-            Debug.LogWarning("musicAudioSource não está atribuído! A música não será pausada.");
+            Debug.LogWarning("musicAudioSource não está atribuído!");
         }
     }
 
@@ -67,8 +75,20 @@ public class PauseMenu : MonoBehaviour
         if (gameUI != null)
             gameUI.SetActive(false);
 
+        if (healthBarObject1 != null)
+            healthBarObject1.SetActive(false);
+
+        if (healthBarObject2 != null)
+            healthBarObject2.SetActive(false);
+
         if (musicAudioSource != null)
             musicAudioSource.Pause();
+
+        if (healthBarVideoPlayer1 != null)
+            healthBarVideoPlayer1.Pause();
+
+        if (healthBarVideoPlayer2 != null)
+            healthBarVideoPlayer2.Pause();
 
         Debug.Log("Jogo pausado");
     }
@@ -84,8 +104,20 @@ public class PauseMenu : MonoBehaviour
         if (gameUI != null)
             gameUI.SetActive(true);
 
+        if (healthBarObject1 != null)
+            healthBarObject1.SetActive(true);
+
+        if (healthBarObject2 != null)
+            healthBarObject2.SetActive(true);
+
         if (musicAudioSource != null)
             musicAudioSource.UnPause();
+
+        if (healthBarVideoPlayer1 != null)
+            healthBarVideoPlayer1.Play();
+
+        if (healthBarVideoPlayer2 != null)
+            healthBarVideoPlayer2.Play();
 
         Debug.Log("Jogo retomado");
     }

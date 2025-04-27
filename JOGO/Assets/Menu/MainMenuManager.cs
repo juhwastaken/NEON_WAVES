@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections; // <- precisa para usar IEnumerator
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -20,6 +21,10 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI sensitivityValueText;
     public Slider volumeSlider;
     public TextMeshProUGUI volumeValueText;
+
+    [Header("Músicas")]
+    public AudioSource menuMusic;      // Música do menu
+    public AudioSource gameplayMusic;  // Música do jogo
 
     void Start()
     {
@@ -65,6 +70,16 @@ public class MainMenuManager : MonoBehaviour
             SaveVolume(intValue);
             ApplyVolume(intValue);
         });
+
+        // Toca a música do menu
+        if (menuMusic != null)
+        {
+            menuMusic.Play();
+        }
+        else
+        {
+            Debug.LogWarning("menuMusic não está atribuído no inspector!");
+        }
     }
 
     // -------------------- Menu Principal --------------------
@@ -76,7 +91,25 @@ public class MainMenuManager : MonoBehaviour
         gameplayElements.SetActive(true);
         player.SetActive(true);
 
-        // Garante aplicação dos valores ao iniciar o gameplay
+        // Para a música do menu com Fade-Out
+        if (menuMusic != null)
+        {
+            StartCoroutine(FadeOutAndStop(menuMusic, 1f)); // 1 segundo de fade
+        }
+        else
+        {
+            Debug.LogWarning("menuMusic não está atribuído no inspector!");
+        }
+
+        if (gameplayMusic != null)
+        {
+            gameplayMusic.Play();
+        }
+        else
+        {
+            Debug.LogWarning("gameplayMusic não está atribuído no inspector!");
+        }
+
         ApplySensitivity(sensitivitySlider.value);
         ApplyVolume((int)volumeSlider.value);
     }
@@ -148,14 +181,13 @@ public class MainMenuManager : MonoBehaviour
 
     public void ApplySensitivity(float value)
     {
-        // Aplica a sensibilidade no script PlayerCamera
         var camera = Camera.main;
         if (camera != null)
         {
             var playerCameraScript = camera.GetComponent<PlayerCamera>();
             if (playerCameraScript != null)
             {
-                playerCameraScript.mouseSensitivity = value * 100f; // Escala para valores esperados
+                playerCameraScript.mouseSensitivity = value * 100f;
             }
         }
     }
@@ -171,9 +203,25 @@ public class MainMenuManager : MonoBehaviour
         AudioListener.volume = value / 100f;
     }
 
-    public void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
         SaveSensitivity(sensitivitySlider.value);
         SaveVolume((int)volumeSlider.value);
+    }
+
+    // -------------------- Fade-Out da Música --------------------
+
+    private IEnumerator FadeOutAndStop(AudioSource audioSource, float fadeTime)
+    {
+        float startVolume = audioSource.volume;
+
+        while (audioSource.volume > 0)
+        {
+            audioSource.volume -= startVolume * Time.deltaTime / fadeTime;
+            yield return null;
+        }
+
+        audioSource.Stop();
+        audioSource.volume = startVolume; // Restaura o volume original se quiser usar de novo depois
     }
 }

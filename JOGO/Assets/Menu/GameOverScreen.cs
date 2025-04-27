@@ -9,10 +9,34 @@ public class GameOverScreen : MonoBehaviour
     [Header("Cena do menu principal")]
     public string mainMenuSceneName = "MainMenu";
 
+    [Header("Músicas")]
+    public AudioSource gameplayMusic;    // Música que tá tocando durante o jogo
+    public AudioSource gameOverMusic;    // Música da tela de morte
+
     public void ShowGameOver()
     {
-        Time.timeScale = 0f; // pausa o jogo
+        // Pausa o jogo
+        Time.timeScale = 0f;
         gameObject.SetActive(true);
+
+        // Troca a música
+        if (gameplayMusic != null)
+        {
+            gameplayMusic.Stop();
+        }
+        else
+        {
+            Debug.LogWarning("GameplayMusic não está atribuído!");
+        }
+
+        if (gameOverMusic != null)
+        {
+            gameOverMusic.Play();
+        }
+        else
+        {
+            Debug.LogWarning("GameOverMusic não está atribuído!");
+        }
     }
 
     public void Retry()
