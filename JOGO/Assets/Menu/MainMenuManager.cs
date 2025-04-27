@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections; // <- precisa para usar IEnumerator
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -17,12 +18,20 @@ public class MainMenuManager : MonoBehaviour
 
     [Header("Options (Sliders e Textos)")]
     public Slider sensitivitySlider;
-    public TextMeshProUGUI SensitivityValueText;
+    public TextMeshProUGUI sensitivityValueText;
     public Slider volumeSlider;
-    public TextMeshProUGUI VolumeValueText;
+    public TextMeshProUGUI volumeValueText;
+
+    [Header("Músicas")]
+    public AudioSource menuMusic;      // Música do menu
+    public AudioSource gameplayMusic;  // Música do jogo
 
     void Start()
     {
+        // Sensitivity pode ter valor quebrado, volume não
+        sensitivitySlider.wholeNumbers = false;
+        volumeSlider.wholeNumbers = true;
+
         // Ativa só o menu principal ao iniciar
         mainMenuPanel.SetActive(true);
         optionsPanel.SetActive(false);
@@ -31,17 +40,46 @@ public class MainMenuManager : MonoBehaviour
         gameplayElements.SetActive(false);
         player.SetActive(false);
 
-        // Carrega configurações salvas
+        // Carrega configurações
         float savedSensitivity = PlayerPrefs.GetFloat("Sensitivity", 1.0f);
-        float savedVolume = PlayerPrefs.GetFloat("Volume", 1.0f);
+        int savedVolume = PlayerPrefs.GetInt("Volume", 100);
 
         sensitivitySlider.value = savedSensitivity;
         volumeSlider.value = savedVolume;
 
+        // Aplica valores
+        ApplySensitivity(savedSensitivity);
+        ApplyVolume(savedVolume);
+
+        // Atualiza textos
         UpdateSensitivityUI(savedSensitivity);
         UpdateVolumeUI(savedVolume);
 
-        AudioListener.volume = savedVolume;
+        // Listeners com salvamento e aplicação
+        sensitivitySlider.onValueChanged.AddListener((value) =>
+        {
+            UpdateSensitivityUI(value);
+            SaveSensitivity(value);
+            ApplySensitivity(value);
+        });
+
+        volumeSlider.onValueChanged.AddListener((value) =>
+        {
+            int intValue = (int)value;
+            UpdateVolumeUI(intValue);
+            SaveVolume(intValue);
+            ApplyVolume(intValue);
+        });
+
+        // Toca a música do menu
+        if (menuMusic != null)
+        {
+            menuMusic.Play();
+        }
+        else
+        {
+            Debug.LogWarning("menuMusic não está atribuído no inspector!");
+        }
     }
 
     // -------------------- Menu Principal --------------------
@@ -52,6 +90,28 @@ public class MainMenuManager : MonoBehaviour
         gameUI.SetActive(true);
         gameplayElements.SetActive(true);
         player.SetActive(true);
+
+        // Para a música do menu com Fade-Out
+        if (menuMusic != null)
+        {
+            StartCoroutine(FadeOutAndStop(menuMusic, 1f)); // 1 segundo de fade
+        }
+        else
+        {
+            Debug.LogWarning("menuMusic não está atribuído no inspector!");
+        }
+
+        if (gameplayMusic != null)
+        {
+            gameplayMusic.Play();
+        }
+        else
+        {
+            Debug.LogWarning("gameplayMusic não está atribuído no inspector!");
+        }
+
+        ApplySensitivity(sensitivitySlider.value);
+        ApplyVolume((int)volumeSlider.value);
     }
 
     public void OpenOptions()
@@ -89,28 +149,79 @@ public class MainMenuManager : MonoBehaviour
 
     // -------------------- Configurações --------------------
 
-    public void OnSensitivityChanged(float value)
+    public void UpdateSensitivityUI(float value)
+    {
+        if (sensitivityValueText != null)
+        {
+            sensitivityValueText.text = value.ToString("F2"); // Ex: 1.25
+        }
+        else
+        {
+            Debug.LogWarning("Campo 'sensitivityValueText' não está atribuído.");
+        }
+    }
+
+    public void UpdateVolumeUI(int value)
+    {
+        if (volumeValueText != null)
+        {
+            volumeValueText.text = $"{value}%"; // Ex: 75%
+        }
+        else
+        {
+            Debug.LogWarning("Campo 'volumeValueText' não está atribuído.");
+        }
+    }
+
+    public void SaveSensitivity(float value)
     {
         PlayerPrefs.SetFloat("Sensitivity", value);
-        UpdateSensitivityUI(value);
+        PlayerPrefs.Save();
     }
 
-    public void OnVolumeChanged(float value)
+    public void ApplySensitivity(float value)
     {
-        PlayerPrefs.SetFloat("Volume", value);
-        UpdateVolumeUI(value);
-        AudioListener.volume = value;
+        var camera = Camera.main;
+        if (camera != null)
+        {
+            var playerCameraScript = camera.GetComponent<PlayerCamera>();
+            if (playerCameraScript != null)
+            {
+                playerCameraScript.mouseSensitivity = value * 100f;
+            }
+        }
     }
 
-    private void UpdateSensitivityUI(float value)
+    public void SaveVolume(int value)
     {
-        if (SensitivityValueText != null)
-            SensitivityValueText.text = value.ToString("F2");
+        PlayerPrefs.SetInt("Volume", value);
+        PlayerPrefs.Save();
     }
 
-    private void UpdateVolumeUI(float value)
+    public void ApplyVolume(int value)
     {
-        if (VolumeValueText != null)
-            VolumeValueText.text = Mathf.RoundToInt(value * 100f) + "%";
+        AudioListener.volume = value / 100f;
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveSensitivity(sensitivitySlider.value);
+        SaveVolume((int)volumeSlider.value);
+    }
+
+    // -------------------- Fade-Out da Música --------------------
+
+    private IEnumerator FadeOutAndStop(AudioSource audioSource, float fadeTime)
+    {
+        float startVolume = audioSource.volume;
+
+        while (audioSource.volume > 0)
+        {
+            audioSource.volume -= startVolume * Time.deltaTime / fadeTime;
+            yield return null;
+        }
+
+        audioSource.Stop();
+        audioSource.volume = startVolume; // Restaura o volume original se quiser usar de novo depois
     }
 }

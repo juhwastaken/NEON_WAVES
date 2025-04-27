@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems; // Certifique-se de ter isso!
+using UnityEngine.Video;
 
-public class PauseManager : MonoBehaviour
+public class PauseMenu : MonoBehaviour
 {
-    [Header("Referências")]
+    [Header("Referências UI e Gameplay")]
     public GameObject pausePanel;
     public GameObject optionsPanel;
     public GameObject mainMenuPanel;
@@ -12,25 +12,44 @@ public class PauseManager : MonoBehaviour
     public GameObject gameplayElements;
     public GameObject player;
 
+    [Header("Música")]
+    public AudioSource musicAudioSource;
+
+    [Header("Vídeos da Barra de Vida")]
+    public VideoPlayer healthBarVideoPlayer1;
+    public VideoPlayer healthBarVideoPlayer2;
+
+    [Header("GameObjects da Barra de Vida")] // <<< NOVO
+    public GameObject healthBarObject1;
+    public GameObject healthBarObject2;
+
     private bool isPaused = false;
+    private MainMenuManager mainMenuManager;
 
     private void Start()
     {
         if (pausePanel != null)
             pausePanel.SetActive(false);
+        else
+            Debug.LogWarning("pausePanel não está atribuído no Inspetor!");
 
         Time.timeScale = 1f;
 
-        // Garante que o EventSystem está ativo
-        if (EventSystem.current == null)
+        mainMenuManager = FindObjectOfType<MainMenuManager>();
+        if (mainMenuManager == null)
         {
-            Debug.LogWarning("Não há EventSystem na cena. Os botões não vão funcionar!");
+            Debug.LogWarning("MainMenuManager não encontrado na cena!");
+        }
+
+        if (musicAudioSource == null)
+        {
+            Debug.LogWarning("musicAudioSource não está atribuído!");
         }
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && player.activeSelf)
+        if (Input.GetKeyDown(KeyCode.Escape) && player != null && player.activeSelf)
         {
             if (optionsPanel != null && optionsPanel.activeSelf)
             {
@@ -56,9 +75,20 @@ public class PauseManager : MonoBehaviour
         if (gameUI != null)
             gameUI.SetActive(false);
 
-        // Libera o cursor para usar os botões
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        if (healthBarObject1 != null)
+            healthBarObject1.SetActive(false);
+
+        if (healthBarObject2 != null)
+            healthBarObject2.SetActive(false);
+
+        if (musicAudioSource != null)
+            musicAudioSource.Pause();
+
+        if (healthBarVideoPlayer1 != null)
+            healthBarVideoPlayer1.Pause();
+
+        if (healthBarVideoPlayer2 != null)
+            healthBarVideoPlayer2.Pause();
 
         Debug.Log("Jogo pausado");
     }
@@ -74,9 +104,20 @@ public class PauseManager : MonoBehaviour
         if (gameUI != null)
             gameUI.SetActive(true);
 
-        // Trava o cursor novamente
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        if (healthBarObject1 != null)
+            healthBarObject1.SetActive(true);
+
+        if (healthBarObject2 != null)
+            healthBarObject2.SetActive(true);
+
+        if (musicAudioSource != null)
+            musicAudioSource.UnPause();
+
+        if (healthBarVideoPlayer1 != null)
+            healthBarVideoPlayer1.Play();
+
+        if (healthBarVideoPlayer2 != null)
+            healthBarVideoPlayer2.Play();
 
         Debug.Log("Jogo retomado");
     }
@@ -95,6 +136,18 @@ public class PauseManager : MonoBehaviour
 
     public void CloseOptions()
     {
+        if (mainMenuManager != null)
+        {
+            float sensValue = mainMenuManager.sensitivitySlider.value;
+            int volumeValue = (int)mainMenuManager.volumeSlider.value;
+
+            mainMenuManager.SaveSensitivity(sensValue);
+            mainMenuManager.ApplySensitivity(sensValue);
+
+            mainMenuManager.SaveVolume(volumeValue);
+            mainMenuManager.ApplyVolume(volumeValue);
+        }
+
         if (optionsPanel != null) optionsPanel.SetActive(false);
         if (pausePanel != null) pausePanel.SetActive(true);
     }

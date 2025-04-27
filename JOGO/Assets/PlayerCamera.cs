@@ -13,6 +13,7 @@ public class PlayerCamera : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked; // Trava o cursor no centro da tela
+        Cursor.visible = false;
     }
 
     void Update()
@@ -29,7 +30,7 @@ public class PlayerCamera : MonoBehaviour
         transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
         player.Rotate(Vector3.up * mouseX);
 
-        // Mantém a câmera atrás do Player
+        // Mantém a câmera atrás do Player com suavidade
         transform.position = Vector3.Lerp(transform.position, player.position + offset, Time.deltaTime * 5f);
         transform.LookAt(player.position + Vector3.up * 2f);
     }
