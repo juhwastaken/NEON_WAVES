@@ -24,17 +24,28 @@ public class PlayerHealthUI : MonoBehaviour
     {
         float porcentagemVida = (float)playerCombat.playerHealth / 100f;
 
+        Color corAtual = Color.white; // Cor padrão
+
         if (porcentagemVida > 0.6f)
         {
-            barraDeVida.color = corVidaAlta;
+            corAtual = corVidaAlta;
         }
         else if (porcentagemVida > 0.3f)
         {
-            barraDeVida.color = corVidaMedia;
+            corAtual = corVidaMedia;
         }
         else
         {
-            barraDeVida.color = corVidaBaixa;
+            corAtual = corVidaBaixa;
+        }
+
+        // Atualiza a cor do RawImage normalmente
+        barraDeVida.color = corAtual;
+
+        // Atualiza também o _Color no material (se tiver Material)
+        if (barraDeVida.material != null)
+        {
+            barraDeVida.material.SetColor("_Color", corAtual);
         }
     }
 }
