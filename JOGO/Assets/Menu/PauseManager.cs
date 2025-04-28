@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using UnityEngine.Video;
 
 public class PauseMenu : MonoBehaviour
@@ -19,9 +20,11 @@ public class PauseMenu : MonoBehaviour
     public VideoPlayer healthBarVideoPlayer1;
     public VideoPlayer healthBarVideoPlayer2;
 
-    [Header("GameObjects da Barra de Vida")] // <<< NOVO
-    public GameObject healthBarObject1;
-    public GameObject healthBarObject2;
+    [Header("Fade da HUD (opcional)")]
+    public CanvasGroup hudCanvasGroup; // Adicione um CanvasGroup no gameUI!
+
+    [Header("Timer")]
+    public LevelTimer levelTimer; // <<< NOVO: Referência para o LevelTimer
 
     private bool isPaused = false;
     private MainMenuManager mainMenuManager;
@@ -37,13 +40,14 @@ public class PauseMenu : MonoBehaviour
 
         mainMenuManager = FindObjectOfType<MainMenuManager>();
         if (mainMenuManager == null)
-        {
             Debug.LogWarning("MainMenuManager não encontrado na cena!");
-        }
 
         if (musicAudioSource == null)
-        {
             Debug.LogWarning("musicAudioSource não está atribuído!");
+
+        if (hudCanvasGroup == null && gameUI != null)
+        {
+            hudCanvasGroup = gameUI.GetComponent<CanvasGroup>();
         }
     }
 
@@ -72,14 +76,8 @@ public class PauseMenu : MonoBehaviour
         if (pausePanel != null)
             pausePanel.SetActive(true);
 
-        if (gameUI != null)
-            gameUI.SetActive(false);
-
-        if (healthBarObject1 != null)
-            healthBarObject1.SetActive(false);
-
-        if (healthBarObject2 != null)
-            healthBarObject2.SetActive(false);
+        if (hudCanvasGroup != null)
+            StartCoroutine(FadeHUD(1f, 0f, 0.2f)); // Fade-out da HUD
 
         if (musicAudioSource != null)
             musicAudioSource.Pause();
@@ -89,6 +87,9 @@ public class PauseMenu : MonoBehaviour
 
         if (healthBarVideoPlayer2 != null)
             healthBarVideoPlayer2.Pause();
+
+        if (levelTimer != null) // <<< NOVO
+            levelTimer.PauseTimer();
 
         Debug.Log("Jogo pausado");
     }
@@ -101,14 +102,8 @@ public class PauseMenu : MonoBehaviour
         if (pausePanel != null)
             pausePanel.SetActive(false);
 
-        if (gameUI != null)
-            gameUI.SetActive(true);
-
-        if (healthBarObject1 != null)
-            healthBarObject1.SetActive(true);
-
-        if (healthBarObject2 != null)
-            healthBarObject2.SetActive(true);
+        if (hudCanvasGroup != null)
+            StartCoroutine(FadeHUD(0f, 1f, 0.2f)); // Fade-in da HUD
 
         if (musicAudioSource != null)
             musicAudioSource.UnPause();
@@ -118,6 +113,9 @@ public class PauseMenu : MonoBehaviour
 
         if (healthBarVideoPlayer2 != null)
             healthBarVideoPlayer2.Play();
+
+        if (levelTimer != null) // <<< NOVO
+            levelTimer.ResumeTimer();
 
         Debug.Log("Jogo retomado");
     }
@@ -163,5 +161,23 @@ public class PauseMenu : MonoBehaviour
         if (gameplayElements != null) gameplayElements.SetActive(false);
         if (player != null) player.SetActive(false);
         if (mainMenuPanel != null) mainMenuPanel.SetActive(true);
+    }
+
+    private System.Collections.IEnumerator FadeHUD(float startAlpha, float endAlpha, float duration)
+    {
+        float elapsed = 0f;
+        if (hudCanvasGroup == null)
+            yield break;
+
+        hudCanvasGroup.alpha = startAlpha;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            hudCanvasGroup.alpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / duration);
+            yield return null;
+        }
+
+        hudCanvasGroup.alpha = endAlpha;
     }
 }
