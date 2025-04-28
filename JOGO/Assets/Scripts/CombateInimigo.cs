@@ -37,6 +37,9 @@ public class EnemyAI : MonoBehaviour
         {
             Debug.LogError("Rigidbody não encontrado no inimigo.");
         }
+
+        // Faz o Rigidbody ignorar a gravidade para poder voar
+        rb.useGravity = false;
     }
 
     void Update()
@@ -59,9 +62,16 @@ public class EnemyAI : MonoBehaviour
 
     void MoveTowardsPlayer()
     {
+        // Move tanto na horizontal quanto na vertical
         Vector3 direction = (player.position - transform.position).normalized;
+
+        // Move usando Rigidbody (levando o Y em conta também!)
         rb.MovePosition(transform.position + direction * speed * Time.deltaTime);
-        transform.LookAt(player);
+
+        // Faz o inimigo olhar pro player (apenas no plano horizontal se quiser)
+        Vector3 lookDirection = new Vector3(player.position.x, transform.position.y, player.position.z) - transform.position;
+        if (lookDirection != Vector3.zero)
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookDirection), Time.deltaTime * 5f);
     }
 
     void AttackPlayer()
