@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
-using System.Collections; // <- precisa para usar IEnumerator
+using System.Collections; // Para usar IEnumerator
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -26,13 +26,13 @@ public class MainMenuManager : MonoBehaviour
     public AudioSource menuMusic;      // Música do menu
     public AudioSource gameplayMusic;  // Música do jogo
 
-    void Start()
+    private void Start()
     {
         // Sensitivity pode ter valor quebrado, volume não
         sensitivitySlider.wholeNumbers = false;
         volumeSlider.wholeNumbers = true;
 
-        // Ativa só o menu principal ao iniciar
+        // Ativa apenas o menu principal ao iniciar
         mainMenuPanel.SetActive(true);
         optionsPanel.SetActive(false);
         creditsPanel.SetActive(false);
@@ -40,22 +40,20 @@ public class MainMenuManager : MonoBehaviour
         gameplayElements.SetActive(false);
         player.SetActive(false);
 
-        // Carrega configurações
+        // Configurações carregadas
         float savedSensitivity = PlayerPrefs.GetFloat("Sensitivity", 1.0f);
         int savedVolume = PlayerPrefs.GetInt("Volume", 100);
 
         sensitivitySlider.value = savedSensitivity;
         volumeSlider.value = savedVolume;
 
-        // Aplica valores
         ApplySensitivity(savedSensitivity);
         ApplyVolume(savedVolume);
 
-        // Atualiza textos
         UpdateSensitivityUI(savedSensitivity);
         UpdateVolumeUI(savedVolume);
 
-        // Listeners com salvamento e aplicação
+        // Listeners para sliders
         sensitivitySlider.onValueChanged.AddListener((value) =>
         {
             UpdateSensitivityUI(value);
@@ -80,6 +78,10 @@ public class MainMenuManager : MonoBehaviour
         {
             Debug.LogWarning("menuMusic não está atribuído no inspector!");
         }
+
+        // No menu, libera o cursor
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     // -------------------- Menu Principal --------------------
@@ -91,10 +93,14 @@ public class MainMenuManager : MonoBehaviour
         gameplayElements.SetActive(true);
         player.SetActive(true);
 
-        // Para a música do menu com Fade-Out
+        // Trava e esconde o cursor ao iniciar o jogo
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        // Fade-out da música do menu
         if (menuMusic != null)
         {
-            StartCoroutine(FadeOutAndStop(menuMusic, 1f)); // 1 segundo de fade
+            StartCoroutine(FadeOutAndStop(menuMusic, 1f));
         }
         else
         {
@@ -153,7 +159,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (sensitivityValueText != null)
         {
-            sensitivityValueText.text = value.ToString("F2"); // Ex: 1.25
+            sensitivityValueText.text = value.ToString("F2");
         }
         else
         {
@@ -165,7 +171,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (volumeValueText != null)
         {
-            volumeValueText.text = $"{value}%"; // Ex: 75%
+            volumeValueText.text = $"{value}%";
         }
         else
         {
@@ -222,6 +228,6 @@ public class MainMenuManager : MonoBehaviour
         }
 
         audioSource.Stop();
-        audioSource.volume = startVolume; // Restaura o volume original se quiser usar de novo depois
+        audioSource.volume = startVolume;
     }
 }
