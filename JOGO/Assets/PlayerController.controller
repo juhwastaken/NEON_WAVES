@@ -76,7 +76,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -8086047558812005389, guid: 331325ad267979b4581ef577e6bb5edc,
+  m_Motion: {fileID: -203655887218126122, guid: daaca58df9f146949997b7b2e8349cfe,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -196,31 +196,31 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Saltar
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: EstaNoChao
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Atacar
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Die
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -305,7 +305,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -3100369314251171874, guid: 65aceb821688847449cbad8f6eb6241d,
+  m_Motion: {fileID: -203655887218126122, guid: df84e5f49df55194aa36918930cccfbc,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -426,7 +426,7 @@ AnimatorStateMachine:
     m_Position: {x: 400, y: 110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6423744619073587637}
-    m_Position: {x: 400, y: 250, z: 0}
+    m_Position: {x: 410, y: 240, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8341172509410167075}
     m_Position: {x: -60, y: 10, z: 0}
