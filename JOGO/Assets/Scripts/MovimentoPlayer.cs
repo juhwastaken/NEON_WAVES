@@ -9,19 +9,19 @@ public class MovimentoJogador : MonoBehaviour
     private Animator animator;
 
     private bool estaNoChao;
-    private bool podePularNovamente; // Para controlar o pulo duplo
+    private bool podePularNovamente;
+
     [SerializeField] private Transform peDoPersonagem;
     [SerializeField] private LayerMask colisaoLayer;
 
     private float velocidadeVertical;
-    [SerializeField] private float forcaPulo = 12f;     // Intensidade do pulo
-    [SerializeField] private float gravidade = -30f;    // Gravidade aplicada no Player
+    [SerializeField] private float forcaPulo = 12f;
+    [SerializeField] private float gravidade = -30f;
     [SerializeField] private float velocidadeMovimento = 7f;
 
-    [Header("Referência à tela de Game Over")]
-    public GameOverScreen gameOverScreen; // arraste no Inspector
-
     private bool jogadorMorto = false;
+
+    private MainMenuManager mainMenuManager;
 
     void Start()
     {
@@ -31,6 +31,10 @@ public class MovimentoJogador : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        mainMenuManager = FindObjectOfType<MainMenuManager>();
+        if (mainMenuManager == null)
+            Debug.LogWarning("MainMenuManager não encontrado na cena!");
     }
 
     void Update()
@@ -67,7 +71,7 @@ public class MovimentoJogador : MonoBehaviour
 
         if (estaNoChao && velocidadeVertical < 0)
         {
-            velocidadeVertical = -2f; // Evita teleportar para o chão
+            velocidadeVertical = -2f;
             podePularNovamente = true;
         }
 
@@ -75,15 +79,10 @@ public class MovimentoJogador : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (estaNoChao)
+            if (estaNoChao || (podePularNovamente && !estaNoChao))
             {
                 velocidadeVertical = forcaPulo;
-                animator.SetTrigger("Saltar");
-            }
-            else if (podePularNovamente)
-            {
-                velocidadeVertical = forcaPulo;
-                podePularNovamente = false;
+                podePularNovamente = estaNoChao ? true : false;
                 animator.SetTrigger("Saltar");
             }
         }
@@ -125,18 +124,18 @@ public class MovimentoJogador : MonoBehaviour
         jogadorMorto = true;
 
         if (controller != null)
-            controller.enabled = false; // Desativa o CharacterController para evitar movimentos
-
-        if (gameOverScreen != null)
-        {
-            gameOverScreen.ShowGameOver();
-        }
-        else
-        {
-            Debug.LogWarning("GameOverScreen não foi atribuído no MovimentoJogador!");
-        }
+            controller.enabled = false;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        if (mainMenuManager != null)
+        {
+            mainMenuManager.ShowGameOver();
+        }
+        else
+        {
+            Debug.LogWarning("MainMenuManager não está na cena ou não foi atribuído!");
+        }
     }
 }
