@@ -21,8 +21,6 @@ public class MovimentoJogador : MonoBehaviour
 
     private bool jogadorMorto = false;
 
-    private MainMenuManager mainMenuManager;
-
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -31,10 +29,6 @@ public class MovimentoJogador : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
-        mainMenuManager = FindObjectOfType<MainMenuManager>();
-        if (mainMenuManager == null)
-            Debug.LogWarning("MainMenuManager não encontrado na cena!");
     }
 
     void Update()
@@ -129,13 +123,7 @@ public class MovimentoJogador : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        if (mainMenuManager != null)
-        {
-            mainMenuManager.ShowGameOver();
-        }
-        else
-        {
-            Debug.LogWarning("MainMenuManager não está na cena ou não foi atribuído!");
-        }
+        Debug.Log("Jogador morreu - ações pós-morte aqui");
+        // Aqui você pode ativar uma tela de Game Over futuramente
     }
 }
