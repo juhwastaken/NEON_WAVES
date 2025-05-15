@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
-public class PauseManager : MonoBehaviour
+public class PauseMenu : MonoBehaviour
 {
     [Header("UI Panels")]
     public GameObject pausePanel;      // Painel do menu de pausa
@@ -46,6 +46,21 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
+        // Bloqueia o ESC se o tutorial ainda estiver ativo
+        if (TutorialOverlay.TutorialAtivo)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                // Fecha o tutorial manualmente
+                var tutorial = FindObjectOfType<TutorialOverlay>();
+                if (tutorial != null)
+                    tutorial.FecharTutorial();
+            }
+
+            return; // Não processa o pause se o tutorial está ativo
+        }
+
+        // ESC normal para pausar
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (optionsPanel.activeSelf)
@@ -68,7 +83,6 @@ public class PauseManager : MonoBehaviour
         if (gameplayUI != null) gameplayUI.SetActive(false);
         optionsPanel.SetActive(false);
 
-        // Pausa timer (e vídeo)
         FindObjectOfType<LevelTimer>()?.PauseTimer();
     }
 
@@ -81,7 +95,6 @@ public class PauseManager : MonoBehaviour
         if (gameplayUI != null) gameplayUI.SetActive(true);
         optionsPanel.SetActive(false);
 
-        // Retoma timer (e vídeo)
         FindObjectOfType<LevelTimer>()?.ResumeTimer();
     }
 

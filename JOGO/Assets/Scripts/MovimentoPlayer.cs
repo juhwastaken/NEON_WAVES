@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MovimentoJogador : MonoBehaviour
 {
@@ -117,13 +118,24 @@ public class MovimentoJogador : MonoBehaviour
 
         jogadorMorto = true;
 
+        // Desativa o movimento
         if (controller != null)
             controller.enabled = false;
 
+        // Exibe cursor
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        Debug.Log("Jogador morreu - ações pós-morte aqui");
-        // Aqui você pode ativar uma tela de Game Over futuramente
+        // Para a música
+        GameplayMusicPlayer.Instance?.PararMusica();
+
+        // Salva a cena atual para poder dar Retry depois
+        PlayerPrefs.SetString("LastGameplayScene", SceneManager.GetActiveScene().name);
+        PlayerPrefs.Save();
+
+        Debug.Log("Jogador morreu - carregando tela de Game Over");
+
+        // Carrega a cena de Game Over
+        SceneManager.LoadScene("GameOverScreen");
     }
 }
