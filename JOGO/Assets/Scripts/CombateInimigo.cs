@@ -24,6 +24,9 @@ public class EnemyAI : MonoBehaviour
 
     private bool isDead = false; // <<< adicionado para não mover/atacar depois da morte
 
+    private AudioSource musicPlayer;
+
+
     void Start()
     {
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
@@ -49,6 +52,11 @@ public class EnemyAI : MonoBehaviour
         {
             Debug.LogError("Animator não encontrado no inimigo.");
         }
+        musicPlayer = GameObject.Find("GameplayMusicPlayer")?.GetComponent<AudioSource>();
+        if (musicPlayer == null)
+        {
+            Debug.LogError("AudioSource da música não encontrado! Verifique se o objeto 'GameplayMusicPlayer' possui um AudioSource.");
+        }
     }
 
     void Update()
@@ -66,6 +74,11 @@ public class EnemyAI : MonoBehaviour
         {
             AttackPlayer();
             nextAttackTime = Time.time + attackCooldown;
+        }
+        if (musicPlayer != null && !musicPlayer.isPlaying)
+        {
+            Destroy(gameObject);
+            return;
         }
     }
 
