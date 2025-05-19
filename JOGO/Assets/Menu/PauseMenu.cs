@@ -6,9 +6,9 @@ using TMPro;
 public class PauseMenu : MonoBehaviour
 {
     [Header("UI Panels")]
-    public GameObject pausePanel;      // Painel do menu de pausa
-    public GameObject optionsPanel;    // Painel do menu de opções
-    public GameObject gameplayUI;      // Elementos de UI que somem ao pausar
+    public GameObject pausePanel;
+    public GameObject optionsPanel;
+    public GameObject gameplayUI;
 
     [Header("Options UI")]
     public Slider sensitivitySlider;
@@ -24,7 +24,6 @@ public class PauseMenu : MonoBehaviour
 
     void Start()
     {
-        // Carregar valores salvos
         float savedSens = PlayerPrefs.GetFloat(SensKey, 5f);
         int savedVol = PlayerPrefs.GetInt(VolKey, 100);
 
@@ -36,6 +35,10 @@ public class PauseMenu : MonoBehaviour
 
         AudioListener.volume = savedVol / 100f;
 
+        // Atualiza texto conforme o slider se move
+        sensitivitySlider.onValueChanged.AddListener(OnSensitivityChanged);
+        volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
+
         if (backButton != null)
             backButton.onClick.AddListener(CloseOptions);
 
@@ -46,21 +49,18 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
-        // Bloqueia o ESC se o tutorial ainda estiver ativo
         if (TutorialOverlay.TutorialAtivo)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                // Fecha o tutorial manualmente
                 var tutorial = FindObjectOfType<TutorialOverlay>();
                 if (tutorial != null)
                     tutorial.FecharTutorial();
             }
 
-            return; // Não processa o pause se o tutorial está ativo
+            return;
         }
 
-        // ESC normal para pausar
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (optionsPanel.activeSelf)
@@ -107,7 +107,7 @@ public class PauseMenu : MonoBehaviour
     public void ExitToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu"); // Substitua pelo nome correto da cena de menu
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void OpenOptions()
@@ -122,7 +122,6 @@ public class PauseMenu : MonoBehaviour
         optionsPanel.SetActive(false);
     }
 
-    // === Sensibilidade ===
     public void OnSensitivityChanged(float value)
     {
         PlayerPrefs.SetFloat(SensKey, value);
@@ -132,10 +131,9 @@ public class PauseMenu : MonoBehaviour
     private void UpdateSensitivityText(float value)
     {
         if (sensitivityValueText != null)
-            sensitivityValueText.text = $"Sensibilidade: {value:F1}";
+            sensitivityValueText.text = value.ToString("F1"); // Só número
     }
 
-    // === Volume ===
     public void OnVolumeChanged(float value)
     {
         int intVal = Mathf.RoundToInt(value);
@@ -147,6 +145,6 @@ public class PauseMenu : MonoBehaviour
     private void UpdateVolumeText(int value)
     {
         if (volumeValueText != null)
-            volumeValueText.text = $"Volume: {value}%";
+            volumeValueText.text = $"{value}%"; // Com porcentagem
     }
 }

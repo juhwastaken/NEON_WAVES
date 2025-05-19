@@ -1,15 +1,15 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
 public class GameOverUI : MonoBehaviour
 {
-    [Header("Pain�is")]
+    [Header("Painéis")]
     public GameObject gameOverPanel;
     public GameObject optionsPanel;
 
-    [Header("Sliders de Op��es")]
+    [Header("Sliders de Opções")]
     public Slider sensitivitySlider;
     public TextMeshProUGUI sensitivityValueText;
     public Slider volumeSlider;
@@ -36,6 +36,7 @@ public class GameOverUI : MonoBehaviour
 
         AudioListener.volume = savedVol / 100f;
 
+        // Atualiza textos em tempo real
         sensitivitySlider.onValueChanged.AddListener(OnSensitivityChanged);
         volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
     }
@@ -72,7 +73,7 @@ public class GameOverUI : MonoBehaviour
     private void UpdateSensitivityText(float value)
     {
         if (sensitivityValueText != null)
-            sensitivityValueText.text = value.ToString("F1");
+            sensitivityValueText.text = value.ToString("F1"); // Só número
     }
 
     public void OnVolumeChanged(float value)
@@ -86,6 +87,6 @@ public class GameOverUI : MonoBehaviour
     private void UpdateVolumeText(int value)
     {
         if (volumeValueText != null)
-            volumeValueText.text = $"{value}%";
+            volumeValueText.text = $"{value}%"; // Com porcentagem
     }
 }

@@ -11,38 +11,50 @@ public class TutorialOverlay : MonoBehaviour
     public Button fecharBotao;
 
     [Header("Gameplay UI")]
-    public GameObject gameplayUI; // <== Referência à UI principal do jogo
+    public GameObject gameplayUI;
 
     private const string TutorialKey = "TutorialVisto";
 
     void Start()
     {
+        // Garante que o painel está ativo no editor
+        if (tutorialPanel == null)
+        {
+            Debug.LogError("Tutorial Panel não está atribuído.");
+            return;
+        }
+
         bool jaVisto = PlayerPrefs.GetInt(TutorialKey, 0) == 1;
 
         if (jaVisto)
         {
             tutorialPanel.SetActive(false);
-            if (gameplayUI != null) gameplayUI.SetActive(true); // Garante que a UI esteja visível
+            if (gameplayUI != null) gameplayUI.SetActive(true);
+            TutorialAtivo = false;
             return;
         }
 
         // Mostrar tutorial
         tutorialPanel.SetActive(true);
         Time.timeScale = 0f;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         GameplayMusicPlayer.Instance?.PausarMusica();
 
         if (gameplayUI != null)
-            gameplayUI.SetActive(false); // Oculta a UI do jogo enquanto o tutorial está ativo
+            gameplayUI.SetActive(false);
 
-        fecharBotao.onClick.AddListener(FecharTutorial);
+        if (fecharBotao != null)
+            fecharBotao.onClick.AddListener(FecharTutorial);
 
-        TutorialAtivo = !jaVisto;
-
+        TutorialAtivo = true;
     }
 
     public void FecharTutorial()
     {
-        if (naoMostrarToggle.isOn)
+        if (naoMostrarToggle != null && naoMostrarToggle.isOn)
         {
             PlayerPrefs.SetInt(TutorialKey, 1);
             PlayerPrefs.Save();
@@ -51,12 +63,15 @@ public class TutorialOverlay : MonoBehaviour
         tutorialPanel.SetActive(false);
 
         if (gameplayUI != null)
-            gameplayUI.SetActive(true); // Reativa UI
+            gameplayUI.SetActive(true);
 
         Time.timeScale = 1f;
-        GameplayMusicPlayer.Instance?.ContinuarMusica();
-        
-        TutorialAtivo = false;
 
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        GameplayMusicPlayer.Instance?.ContinuarMusica();
+
+        TutorialAtivo = false;
     }
 }

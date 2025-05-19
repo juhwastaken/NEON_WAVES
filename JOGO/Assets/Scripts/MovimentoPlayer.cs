@@ -27,14 +27,15 @@ public class MovimentoJogador : MonoBehaviour
         controller = GetComponent<CharacterController>();
         myCamera = Camera.main.transform;
         animator = GetComponent<Animator>();
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     void Update()
     {
+        // Bloqueia o controle se jogador morreu ou controller não está disponível
         if (jogadorMorto || controller == null || !controller.enabled) return;
+
+        // Impede movimentação se o tempo do jogo estiver pausado (ex: durante o tutorial)
+        if (Time.timeScale == 0f) return;
 
         ProcessarMovimentoHorizontal();
         ProcessarPuloEGravidade();
