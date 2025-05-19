@@ -17,14 +17,26 @@ public class GameOverUI : MonoBehaviour
 
     private const string SensKey = "Sensitivity";
     private const string VolKey = "Volume";
+    private const string ShowGameOverKey = "ShowGameOver";
 
     void Start()
     {
         Time.timeScale = 1f;
 
-        gameOverPanel.SetActive(true);
+        // Verifica se deve mostrar o painel de Game Over
+        bool showGameOver = PlayerPrefs.GetInt(ShowGameOverKey, 0) == 1;
+
+        gameOverPanel.SetActive(showGameOver);
         optionsPanel.SetActive(false);
 
+        if (showGameOver)
+        {
+            // Limpa a flag para não exibir automaticamente na próxima vez
+            PlayerPrefs.SetInt(ShowGameOverKey, 0);
+            PlayerPrefs.Save();
+        }
+
+        // Carrega preferências salvas
         float savedSens = PlayerPrefs.GetFloat(SensKey, 5f);
         int savedVol = PlayerPrefs.GetInt(VolKey, 100);
 
@@ -73,7 +85,7 @@ public class GameOverUI : MonoBehaviour
     private void UpdateSensitivityText(float value)
     {
         if (sensitivityValueText != null)
-            sensitivityValueText.text = value.ToString("F1"); // Só número
+            sensitivityValueText.text = value.ToString("F1"); // Formato 0.0
     }
 
     public void OnVolumeChanged(float value)
@@ -87,6 +99,6 @@ public class GameOverUI : MonoBehaviour
     private void UpdateVolumeText(int value)
     {
         if (volumeValueText != null)
-            volumeValueText.text = $"{value}%"; // Com porcentagem
+            volumeValueText.text = $"{value}%";
     }
 }

@@ -11,30 +11,37 @@ public class MovimentoJogador : MonoBehaviour
 
     private bool estaNoChao;
     private bool podePularNovamente;
+    private bool jogadorMorto = false;
 
+    [Header("Componentes")]
     [SerializeField] private Transform peDoPersonagem;
     [SerializeField] private LayerMask colisaoLayer;
 
+    [Header("Movimentação")]
     private float velocidadeVertical;
     [SerializeField] private float forcaPulo = 12f;
     [SerializeField] private float gravidade = -30f;
     [SerializeField] private float velocidadeMovimento = 7f;
 
-    private bool jogadorMorto = false;
-
-    void Start()
+    private void Start()
     {
         controller = GetComponent<CharacterController>();
-        myCamera = Camera.main.transform;
+        myCamera = Camera.main?.transform;
         animator = GetComponent<Animator>();
+
+        if (controller == null)
+            Debug.LogError("CharacterController não encontrado no jogador!");
+
+        if (animator == null)
+            Debug.LogError("Animator não encontrado no jogador!");
+
+        if (myCamera == null)
+            Debug.LogError("Camera.main não encontrada!");
     }
 
-    void Update()
+    private void Update()
     {
-        // Bloqueia o controle se jogador morreu ou controller não está disponível
         if (jogadorMorto || controller == null || !controller.enabled) return;
-
-        // Impede movimentação se o tempo do jogo estiver pausado (ex: durante o tutorial)
         if (Time.timeScale == 0f) return;
 
         ProcessarMovimentoHorizontal();
@@ -127,16 +134,17 @@ public class MovimentoJogador : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // Para a música
+        // Para a música, se existir
         GameplayMusicPlayer.Instance?.PararMusica();
 
-        // Salva a cena atual para poder dar Retry depois
+        // Salva o nome da cena atual e sinaliza que deve mostrar a tela de Game Over
         PlayerPrefs.SetString("LastGameplayScene", SceneManager.GetActiveScene().name);
+        PlayerPrefs.SetInt("ShowGameOver", 1);
         PlayerPrefs.Save();
 
         Debug.Log("Jogador morreu - carregando tela de Game Over");
 
         // Carrega a cena de Game Over
-        SceneManager.LoadScene("GameOverScreen");
+        SceneManager.LoadScene("GameOver");
     }
 }
