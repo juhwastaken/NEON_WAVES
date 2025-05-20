@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 public class PlayerCombat : MonoBehaviour
@@ -29,6 +29,12 @@ public class PlayerCombat : MonoBehaviour
     private bool musicStarted = false;
     public AudioSource musicSource;
     private float musicTime;
+
+    // ðŸŽµ SFX de combate
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip sfxAtaque;
+    [SerializeField] private AudioClip sfxRecebeDano;
+    [SerializeField] private AudioClip sfxDash;
 
     void Start()
     {
@@ -76,6 +82,10 @@ public class PlayerCombat : MonoBehaviour
     {
         animator.SetTrigger("Atacar");
 
+        // ðŸ”Š Toca som de ataque
+        if (sfxAtaque != null && audioSource != null)
+            audioSource.PlayOneShot(sfxAtaque);
+
         Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRadius, enemyLayer);
         bool enemyHit = false;
 
@@ -118,7 +128,7 @@ public class PlayerCombat : MonoBehaviour
             }
             else
             {
-                Debug.Log("Nenhum inimigo próximo para dash.");
+                Debug.Log("Nenhum inimigo prÃ³ximo para dash.");
             }
         }
         else
@@ -133,12 +143,16 @@ public class PlayerCombat : MonoBehaviour
 
         if (isInvulnerable)
         {
-            Debug.Log("Dano ignorado (invulnerável durante o dash).");
+            Debug.Log("Dano ignorado (invulnerÃ¡vel durante o dash).");
             return;
         }
 
         playerHealth -= damage;
         Debug.Log($"Jogador tomou {damage} de dano! Vida: {playerHealth}");
+
+        // ðŸ”Š Toca som de dano
+        if (sfxRecebeDano != null && audioSource != null)
+            audioSource.PlayOneShot(sfxRecebeDano);
 
         currentDamageMultiplier = 1;
 
@@ -190,13 +204,17 @@ public class PlayerCombat : MonoBehaviour
         isInvulnerable = true;
         lastDashTime = Time.time;
 
+        // ðŸ”Š Toca som de dash
+        if (sfxDash != null && audioSource != null)
+            audioSource.PlayOneShot(sfxDash);
+
         Vector3 start = transform.position;
         Vector3 end = target.position;
 
         float dashDuration = Vector3.Distance(start, end) / dashSpeed;
         float elapsed = 0f;
 
-        musicTime = musicSource.time; // Pega o tempo no momento que começa o dash
+        musicTime = musicSource.time;
         float beatDistance = Mathf.Min((musicTime / perfectAttackTime) % 1f, 1f - ((musicTime / perfectAttackTime) % 1f));
         Debug.Log($"Beat Distance (Dash): {beatDistance}");
 
@@ -229,6 +247,6 @@ public class PlayerCombat : MonoBehaviour
         isInvulnerable = false;
         isDashing = false;
 
-        Debug.Log("Jogador não está mais invulnerável.");
+        Debug.Log("Jogador nÃ£o estÃ¡ mais invulnerÃ¡vel.");
     }
 }

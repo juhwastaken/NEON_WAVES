@@ -9,28 +9,30 @@ public class MovimentoJogador : MonoBehaviour
     private Animator animator;
 
     private bool estaNoChao;
-    private bool podePularNovamente; // Para controlar o pulo duplo
+    private bool podePularNovamente;
     [SerializeField] private Transform peDoPersonagem;
     [SerializeField] private LayerMask colisaoLayer;
 
     private float velocidadeVertical;
-    [SerializeField] private float forcaPulo = 12f;     // Intensidade do pulo
-    [SerializeField] private float gravidade = -30f;    // Gravidade aplicada no Player
+    [SerializeField] private float forcaPulo = 12f;
+    [SerializeField] private float gravidade = -30f;
     [SerializeField] private float velocidadeMovimento = 7f;
 
     [Header("Referência à tela de Game Over")]
-    public GameOverScreen gameOverScreen; // arraste no Inspector
+    public GameOverScreen gameOverScreen;
 
     private bool jogadorMorto = false;
+
+    // 🎵 SFX de pulo
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip sfxPulo;
+    [SerializeField] private AudioClip sfxPuloDuplo;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
         myCamera = Camera.main.transform;
         animator = GetComponent<Animator>();
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     void Update()
@@ -67,7 +69,7 @@ public class MovimentoJogador : MonoBehaviour
 
         if (estaNoChao && velocidadeVertical < 0)
         {
-            velocidadeVertical = -2f; // Evita teleportar para o chão
+            velocidadeVertical = -2f;
             podePularNovamente = true;
         }
 
@@ -79,12 +81,20 @@ public class MovimentoJogador : MonoBehaviour
             {
                 velocidadeVertical = forcaPulo;
                 animator.SetTrigger("Saltar");
+
+                // 🔊 Toca som de pulo
+                if (sfxPulo != null && audioSource != null)
+                    audioSource.PlayOneShot(sfxPulo);
             }
             else if (podePularNovamente)
             {
                 velocidadeVertical = forcaPulo;
                 podePularNovamente = false;
                 animator.SetTrigger("Saltar");
+
+                // 🔊 Toca som de pulo duplo
+                if (sfxPuloDuplo != null && audioSource != null)
+                    audioSource.PlayOneShot(sfxPuloDuplo);
             }
         }
 
@@ -125,7 +135,7 @@ public class MovimentoJogador : MonoBehaviour
         jogadorMorto = true;
 
         if (controller != null)
-            controller.enabled = false; // Desativa o CharacterController para evitar movimentos
+            controller.enabled = false;
 
         if (gameOverScreen != null)
         {
