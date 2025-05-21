@@ -11,38 +11,30 @@ public class MovimentoJogador : MonoBehaviour
 
     private bool estaNoChao;
     private bool podePularNovamente;
-    private bool jogadorMorto = false;
 
-    [Header("Componentes")]
     [SerializeField] private Transform peDoPersonagem;
     [SerializeField] private LayerMask colisaoLayer;
 
-    [Header("Movimentação")]
     private float velocidadeVertical;
     [SerializeField] private float forcaPulo = 12f;
     [SerializeField] private float gravidade = -30f;
     [SerializeField] private float velocidadeMovimento = 7f;
 
-    private void Start()
+    private bool jogadorMorto = false;
+
+    void Start()
     {
         controller = GetComponent<CharacterController>();
-        myCamera = Camera.main?.transform;
+        myCamera = Camera.main.transform;
         animator = GetComponent<Animator>();
 
-        if (controller == null)
-            Debug.LogError("CharacterController não encontrado no jogador!");
-
-        if (animator == null)
-            Debug.LogError("Animator não encontrado no jogador!");
-
-        if (myCamera == null)
-            Debug.LogError("Camera.main não encontrada!");
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    private void Update()
+    void Update()
     {
         if (jogadorMorto || controller == null || !controller.enabled) return;
-        if (Time.timeScale == 0f) return;
 
         ProcessarMovimentoHorizontal();
         ProcessarPuloEGravidade();
@@ -65,7 +57,7 @@ public class MovimentoJogador : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movimento), Time.deltaTime * 10f);
         }
 
-        animator.SetBool("Sprint", movimento.magnitude > 0.1f);
+        animator.SetBool("Moving", movimento.magnitude > 0.1f);
     }
 
     private void ProcessarPuloEGravidade()
@@ -79,6 +71,7 @@ public class MovimentoJogador : MonoBehaviour
         }
 
         animator.SetBool("EstaNoChao", estaNoChao);
+        Debug.Log("to no chao");
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -134,17 +127,16 @@ public class MovimentoJogador : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // Para a música, se existir
+        // Para a música
         GameplayMusicPlayer.Instance?.PararMusica();
 
-        // Salva o nome da cena atual e sinaliza que deve mostrar a tela de Game Over
+        // Salva a cena atual para poder dar Retry depois
         PlayerPrefs.SetString("LastGameplayScene", SceneManager.GetActiveScene().name);
-        PlayerPrefs.SetInt("ShowGameOver", 1);
         PlayerPrefs.Save();
 
         Debug.Log("Jogador morreu - carregando tela de Game Over");
 
         // Carrega a cena de Game Over
-        SceneManager.LoadScene("GameOver");
+        SceneManager.LoadScene("GameOverScreen");
     }
 }
