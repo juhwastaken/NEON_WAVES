@@ -38,11 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-<<<<<<< Updated upstream
-  m_IndirectSpecularColor: {r: 0.017090743, g: 0.010265925, b: 0.016022505, a: 1}
-=======
   m_IndirectSpecularColor: {r: 0.017090408, g: 0.010264041, b: 0.01602167, a: 1}
->>>>>>> Stashed changes
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6489,11 +6485,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 206738453}
   serializedVersion: 2
-<<<<<<< Updated upstream
-  m_LocalRotation: {x: 0.010032619, y: -0.00000001734814, z: 1.7405606e-10, w: 0.9999497}
-=======
   m_LocalRotation: {x: -0.44030875, y: -0.08144389, z: -0.04014635, w: 0.89324325}
->>>>>>> Stashed changes
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6932,11 +6924,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 220139622}
   serializedVersion: 2
-<<<<<<< Updated upstream
-  m_LocalRotation: {x: 0.04183111, y: -1.8648023e-15, z: 1.6544012e-16, w: 0.9991247}
-=======
   m_LocalRotation: {x: -0.44030875, y: -0.08144389, z: -0.04014635, w: 0.89324325}
->>>>>>> Stashed changes
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8369,13 +8357,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-<<<<<<< Updated upstream
-  m_LocalRotation: {x: 0.010032624, y: -0.000000034495137, z: 3.4609415e-10, w: 0.9999497}
-  m_LocalPosition: {x: -12.604858, y: 10.282013, z: -23.687845}
-=======
   m_LocalRotation: {x: -0.44030875, y: -0.081443936, z: -0.040146377, w: 0.8932432}
   m_LocalPosition: {x: -172.5716, y: -49.369995, z: -22.658455}
->>>>>>> Stashed changes
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13736,7 +13719,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 294785433887619666, guid: 6dd2c3206c8fdec48aec832ef3218cba, type: 3}
-<<<<<<< Updated upstream
 --- !u!1 &505188787 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4957605393579145644, guid: 4f46098734d87e24490aef9267915ad2,
@@ -13833,8 +13815,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df8b5f5107e0b954ca31251d64e0fa1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-=======
->>>>>>> Stashed changes
 --- !u!1 &507955211 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3566207899841815972, guid: 6dd2c3206c8fdec48aec832ef3218cba,
@@ -14015,10 +13995,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2052203131}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-<<<<<<< Updated upstream
---- !u!82 &514442283
-AudioSource:
-=======
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -41.785583, y: -16.908203}
@@ -14026,7 +14002,6 @@ AudioSource:
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &513398114
 MonoBehaviour:
->>>>>>> Stashed changes
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -16166,11 +16141,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 588904025}
   serializedVersion: 2
-<<<<<<< Updated upstream
-  m_LocalRotation: {x: -0.02152065, y: -0.00000001713595, z: -3.688622e-10, w: 0.99976844}
-=======
   m_LocalRotation: {x: -0.44030875, y: -0.081443936, z: -0.040146377, w: 0.8932432}
->>>>>>> Stashed changes
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -24445,7 +24416,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
-<<<<<<< Updated upstream
 --- !u!1001 &908412884
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25132,8 +25102,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 505188794}
   m_SourcePrefab: {fileID: 100100000, guid: 4f46098734d87e24490aef9267915ad2, type: 3}
-=======
->>>>>>> Stashed changes
 --- !u!1 &913696301
 GameObject:
   m_ObjectHideFlags: 0
@@ -34105,8 +34073,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 319d2fe34a804e245819465c9505ea59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< Updated upstream
-=======
   m_ExcludedPropertiesInInspector:
   - m_Script
   m_LockStageInInspector: 
@@ -34200,7 +34166,6 @@ MonoBehaviour:
   - {fileID: 220139623}
   - {fileID: 206738454}
   - {fileID: 588904026}
->>>>>>> Stashed changes
 --- !u!4 &1261373983
 Transform:
   m_ObjectHideFlags: 0
@@ -34210,11 +34175,7 @@ Transform:
   m_GameObject: {fileID: 1261373981}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-<<<<<<< Updated upstream
   m_LocalPosition: {x: -584.10486, y: -254.21799, z: -23.687845}
-=======
-  m_LocalPosition: {x: -583.5716, y: -256.87, z: -22.658455}
->>>>>>> Stashed changes
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -65721,8 +65682,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8932166026425825430, guid: 6dd2c3206c8fdec48aec832ef3218cba, type: 3}
-<<<<<<< Updated upstream
-=======
 --- !u!1 &2139307652 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a15167695e010434e96ba8b252ac8513,
@@ -65893,7 +65852,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2139917657}
   m_CullTransparentMesh: 1
->>>>>>> Stashed changes
 --- !u!1001 &2143562961
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -66722,9 +66680,5 @@ SceneRoots:
   - {fileID: 1650739384}
   - {fileID: 2052203131}
   - {fileID: 749243177}
-<<<<<<< Updated upstream
-  - {fileID: 144435051}
-=======
   - {fileID: 1561144023}
   - {fileID: 1264587028}
->>>>>>> Stashed changes
