@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MovimentoJogador : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class MovimentoJogador : MonoBehaviour
 
     private bool estaNoChao;
     private bool podePularNovamente;
+
     [SerializeField] private Transform peDoPersonagem;
     [SerializeField] private LayerMask colisaoLayer;
 
@@ -18,21 +20,16 @@ public class MovimentoJogador : MonoBehaviour
     [SerializeField] private float gravidade = -30f;
     [SerializeField] private float velocidadeMovimento = 7f;
 
-    [Header("Referência à tela de Game Over")]
-    public GameOverScreen gameOverScreen;
-
     private bool jogadorMorto = false;
-
-    // 🎵 SFX de pulo
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip sfxPulo;
-    [SerializeField] private AudioClip sfxPuloDuplo;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
         myCamera = Camera.main.transform;
         animator = GetComponent<Animator>();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void Update()
@@ -60,7 +57,7 @@ public class MovimentoJogador : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movimento), Time.deltaTime * 10f);
         }
 
-        animator.SetBool("Sprint", movimento.magnitude > 0.1f);
+        animator.SetBool("Moving", movimento.magnitude > 0.1f);
     }
 
     private void ProcessarPuloEGravidade()
@@ -74,27 +71,15 @@ public class MovimentoJogador : MonoBehaviour
         }
 
         animator.SetBool("EstaNoChao", estaNoChao);
+        Debug.Log("to no chao");
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (estaNoChao)
+            if (estaNoChao || (podePularNovamente && !estaNoChao))
             {
                 velocidadeVertical = forcaPulo;
+                podePularNovamente = estaNoChao ? true : false;
                 animator.SetTrigger("Saltar");
-
-                // 🔊 Toca som de pulo
-                if (sfxPulo != null && audioSource != null)
-                    audioSource.PlayOneShot(sfxPulo);
-            }
-            else if (podePularNovamente)
-            {
-                velocidadeVertical = forcaPulo;
-                podePularNovamente = false;
-                animator.SetTrigger("Saltar");
-
-                // 🔊 Toca som de pulo duplo
-                if (sfxPuloDuplo != null && audioSource != null)
-                    audioSource.PlayOneShot(sfxPuloDuplo);
             }
         }
 
@@ -134,19 +119,24 @@ public class MovimentoJogador : MonoBehaviour
 
         jogadorMorto = true;
 
+        // Desativa o movimento
         if (controller != null)
             controller.enabled = false;
 
-        if (gameOverScreen != null)
-        {
-            gameOverScreen.ShowGameOver();
-        }
-        else
-        {
-            Debug.LogWarning("GameOverScreen não foi atribuído no MovimentoJogador!");
-        }
-
+        // Exibe cursor
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        // Para a música
+        GameplayMusicPlayer.Instance?.PararMusica();
+
+        // Salva a cena atual para poder dar Retry depois
+        PlayerPrefs.SetString("LastGameplayScene", SceneManager.GetActiveScene().name);
+        PlayerPrefs.Save();
+
+        Debug.Log("Jogador morreu - carregando tela de Game Over");
+
+        // Carrega a cena de Game Over
+        SceneManager.LoadScene("GameOverScreen");
     }
 }
