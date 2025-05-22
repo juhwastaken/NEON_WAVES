@@ -17,6 +17,9 @@ public class PauseMenu : MonoBehaviour
     public TextMeshProUGUI volumeValueText;
     public Button backButton;
 
+    [Header("Audio")]
+    public AudioSource musicSource; // Arraste o AudioSource da música aqui via Inspector
+
     private bool isPaused = false;
 
     private const string SensKey = "Sensitivity";
@@ -35,7 +38,6 @@ public class PauseMenu : MonoBehaviour
 
         AudioListener.volume = savedVol / 100f;
 
-        // Atualiza texto conforme o slider se move
         sensitivitySlider.onValueChanged.AddListener(OnSensitivityChanged);
         volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
 
@@ -45,6 +47,10 @@ public class PauseMenu : MonoBehaviour
         pausePanel.SetActive(false);
         optionsPanel.SetActive(false);
         if (gameplayUI != null) gameplayUI.SetActive(true);
+
+        // Se não for atribuído manualmente, tenta encontrar por tag
+        if (musicSource == null)
+            musicSource = GameObject.FindGameObjectWithTag("Music")?.GetComponent<AudioSource>();
     }
 
     void Update()
@@ -84,6 +90,9 @@ public class PauseMenu : MonoBehaviour
         optionsPanel.SetActive(false);
 
         FindObjectOfType<LevelTimer>()?.PauseTimer();
+
+        if (musicSource != null && musicSource.isPlaying)
+            musicSource.Pause();
     }
 
     public void ResumeGame()
@@ -96,6 +105,9 @@ public class PauseMenu : MonoBehaviour
         optionsPanel.SetActive(false);
 
         FindObjectOfType<LevelTimer>()?.ResumeTimer();
+
+        if (musicSource != null && !musicSource.isPlaying)
+            musicSource.UnPause();
     }
 
     public void RetryLevel()
@@ -131,7 +143,7 @@ public class PauseMenu : MonoBehaviour
     private void UpdateSensitivityText(float value)
     {
         if (sensitivityValueText != null)
-            sensitivityValueText.text = value.ToString("F1"); // Só número
+            sensitivityValueText.text = value.ToString("F1");
     }
 
     public void OnVolumeChanged(float value)
@@ -145,6 +157,6 @@ public class PauseMenu : MonoBehaviour
     private void UpdateVolumeText(int value)
     {
         if (volumeValueText != null)
-            volumeValueText.text = $"{value}%"; // Com porcentagem
+            volumeValueText.text = $"{value}%";
     }
 }
