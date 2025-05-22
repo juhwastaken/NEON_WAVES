@@ -8501,9 +8501,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.35955647, y: -0.000000016055678, z: -0.0000000061866663,
-    w: 0.93312335}
-  m_LocalPosition: {x: -11.104858, y: 5.782013, z: -21.687845}
+  m_LocalRotation: {x: -0.35955647, y: 0.000000016055674, z: 0.000000006186665, w: 0.93312335}
+  m_LocalPosition: {x: 25.395142, y: 50.782013, z: -21.687845}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13882,6 +13881,10 @@ MonoBehaviour:
   perfectAttackTime: 1.0833334
   timeMargin: 0.3
   musicSource: {fileID: 1457336502}
+  audioSource: {fileID: 0}
+  sfxAtaque: {fileID: 0}
+  sfxRecebeDano: {fileID: 0}
+  sfxDash: {fileID: 0}
 --- !u!114 &505188790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13897,7 +13900,7 @@ MonoBehaviour:
   peDoPersonagem: {fileID: 1515483109}
   colisaoLayer:
     serializedVersion: 2
-    m_Bits: 73
+    m_Bits: 1
   forcaPulo: 12
   gravidade: -30
   velocidadeMovimento: 7
@@ -13939,6 +13942,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df8b5f5107e0b954ca31251d64e0fa1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  somSubwoofer: {fileID: 0}
 --- !u!1 &507955211 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3566207899841815972, guid: 6dd2c3206c8fdec48aec832ef3218cba,
@@ -15905,8 +15909,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 588904025}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.35955647, y: -0.000000016055678, z: -0.0000000061866663,
-    w: 0.93312335}
+  m_LocalRotation: {x: -0.35955647, y: 0.000000016055674, z: 0.000000006186665, w: 0.93312335}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
