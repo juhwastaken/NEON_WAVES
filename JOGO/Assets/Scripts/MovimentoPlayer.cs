@@ -27,9 +27,6 @@ public class MovimentoJogador : MonoBehaviour
         controller = GetComponent<CharacterController>();
         myCamera = Camera.main.transform;
         animator = GetComponent<Animator>();
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     void Update()
