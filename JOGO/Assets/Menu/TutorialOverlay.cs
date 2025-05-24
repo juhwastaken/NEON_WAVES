@@ -13,10 +13,23 @@ public class TutorialOverlay : MonoBehaviour
     [Header("Gameplay UI")]
     public GameObject gameplayUI;
 
+    [Header("Configuração de Teste")]
+    public bool resetarPrefsNoComeco = false;
+
     private const string TutorialKey = "TutorialVisto";
 
     void Start()
     {
+        Debug.Log("TutorialOverlay Start chamado");
+
+        // Resetar PlayerPrefs se ativado para testes
+        if (resetarPrefsNoComeco)
+        {
+            PlayerPrefs.DeleteKey(TutorialKey);
+            PlayerPrefs.Save();
+            Debug.LogWarning("TutorialKey deletado para testes.");
+        }
+
         // Garante que o painel está ativo no editor
         if (tutorialPanel == null)
         {
@@ -25,6 +38,7 @@ public class TutorialOverlay : MonoBehaviour
         }
 
         bool jaVisto = PlayerPrefs.GetInt(TutorialKey, 0) == 1;
+        Debug.Log("Tutorial já visto? " + jaVisto);
 
         if (jaVisto)
         {
@@ -35,11 +49,11 @@ public class TutorialOverlay : MonoBehaviour
         }
 
         // Mostrar tutorial
+        Debug.Log("Mostrando tutorial...");
         tutorialPanel.SetActive(true);
         Time.timeScale = 0f;
 
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        CursorManager.LiberarCursor();
 
         GameplayMusicPlayer.Instance?.PausarMusica();
 
@@ -58,6 +72,7 @@ public class TutorialOverlay : MonoBehaviour
         {
             PlayerPrefs.SetInt(TutorialKey, 1);
             PlayerPrefs.Save();
+            Debug.Log("Tutorial marcado como visto.");
         }
 
         tutorialPanel.SetActive(false);
@@ -67,8 +82,7 @@ public class TutorialOverlay : MonoBehaviour
 
         Time.timeScale = 1f;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        CursorManager.TravarCursor();
 
         GameplayMusicPlayer.Instance?.ContinuarMusica();
 

@@ -2848,8 +2848,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2884,7 +2884,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 72.20874, w: 0}
+  m_margin: {x: 0, y: 0, z: -11.9926605, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2914,8 +2914,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 271.6, y: 61.7}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 352.01, y: 70.681}
+  m_SizeDelta: {x: 270, y: 66}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &76683605 stripped
 GameObject:
@@ -6764,8 +6764,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 206738453}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.35955647, y: -0.000000016055674, z: -0.000000006186665,
-    w: 0.93312335}
+  m_LocalRotation: {x: -0.35955647, y: 0.000000016055678, z: 0.0000000061866663, w: 0.93312335}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8503,7 +8502,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.35955647, y: 0.000000016055674, z: 0.000000006186665, w: 0.93312335}
+  m_LocalRotation: {x: -0.35955647, y: -0.000000016055678, z: -0.0000000061866663,
+    w: 0.93312335}
   m_LocalPosition: {x: -34.60486, y: -4.717987, z: -21.687845}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -12337,8 +12337,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 22, y: 107}
-  m_SizeDelta: {x: 150, y: 30}
+  m_AnchoredPosition: {x: 18, y: 130}
+  m_SizeDelta: {x: 200, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &454347409
 MonoBehaviour:
@@ -15906,7 +15906,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 588904025}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.35955647, y: 0.000000016055674, z: 0.000000006186665, w: 0.93312335}
+  m_LocalRotation: {x: -0.35955647, y: -0.000000016055678, z: -0.0000000061866663,
+    w: 0.93312335}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -19006,8 +19007,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 23.9, y: -142.9}
-  m_SizeDelta: {x: 130, y: 25}
+  m_AnchoredPosition: {x: 16, y: -222}
+  m_SizeDelta: {x: 230, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &701261646
 MonoBehaviour:
@@ -28148,6 +28149,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7979cb63fd601cc4fae5545f810c379d,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 1126375120051138443, guid: 7979cb63fd601cc4fae5545f810c379d,
         type: 3}
       propertyPath: m_Layer
@@ -29323,8 +29329,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 21, y: -58.1}
-  m_SizeDelta: {x: 300, y: 20}
+  m_AnchoredPosition: {x: 14.542961, y: -78.33006}
+  m_SizeDelta: {x: 400, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1045394196
 GameObject:
@@ -29360,8 +29366,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 22, y: -11}
-  m_SizeDelta: {x: 150, y: 30}
+  m_AnchoredPosition: {x: 15.882957, y: -15.219257}
+  m_SizeDelta: {x: 200, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1045394198
 MonoBehaviour:
@@ -34607,6 +34613,7 @@ MonoBehaviour:
   naoMostrarToggle: {fileID: 1247256124}
   fecharBotao: {fileID: 1499145350}
   gameplayUI: {fileID: 1232941614}
+  resetarPrefsNoComeco: 1
 --- !u!1 &1261373981
 GameObject:
   m_ObjectHideFlags: 0
@@ -39172,8 +39179,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 21, y: 62}
-  m_SizeDelta: {x: 300, y: 20}
+  m_AnchoredPosition: {x: 16.681892, y: 70.68112}
+  m_SizeDelta: {x: 400, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1439386940
 MonoBehaviour:
@@ -42920,7 +42927,7 @@ GameObject:
   - component: {fileID: 1561144023}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46409,15 +46416,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -46445,7 +46452,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 73.22485, w: 0}
+  m_margin: {x: 0, y: 0, z: -12.084549, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -46475,8 +46482,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 272.1, y: -58.6}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 351, y: -79}
+  m_SizeDelta: {x: 270, y: 66}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1712925015 stripped
 GameObject:
@@ -66791,6 +66798,11 @@ PrefabInstance:
     - target: {fileID: 2597632616150522321, guid: 715c7785082f4d64bbd36f2e417dec03,
         type: 3}
       propertyPath: m_Name
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2597632616150522321, guid: 715c7785082f4d64bbd36f2e417dec03,
+        type: 3}
+      propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 3030779922702532025, guid: 715c7785082f4d64bbd36f2e417dec03,

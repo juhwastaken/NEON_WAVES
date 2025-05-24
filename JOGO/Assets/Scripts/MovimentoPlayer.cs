@@ -36,7 +36,6 @@ public class MovimentoJogador : MonoBehaviour
         ProcessarMovimentoHorizontal();
         ProcessarPuloEGravidade();
         VerificarMortePorTecla();
-        VerificarMortePorQueda();
     }
 
     private void ProcessarMovimentoHorizontal()
@@ -93,14 +92,6 @@ public class MovimentoJogador : MonoBehaviour
         }
     }
 
-    private void VerificarMortePorQueda()
-    {
-        if (transform.position.y < -10f)
-        {
-            Debug.Log("Jogador caiu do mapa");
-            PlayerDeath();
-        }
-    }
 
     public void AplicarImpulsoVertical(float impulso)
     {
@@ -110,30 +101,39 @@ public class MovimentoJogador : MonoBehaviour
         animator.SetTrigger("Saltar");
     }
 
-    public void PlayerDeath()
-    {
-        if (jogadorMorto) return;
+   public void PlayerDeath()
+{
+    if (jogadorMorto) return;
 
-        jogadorMorto = true;
+    jogadorMorto = true;
 
-        // Desativa o movimento
-        if (controller != null)
-            controller.enabled = false;
+    // Desativa o movimento
+    if (controller != null)
+        controller.enabled = false;
 
-        // Exibe cursor
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+    // Exibe cursor
+    Cursor.lockState = CursorLockMode.None;
+    Cursor.visible = true;
 
-        // Para a música
-        GameplayMusicPlayer.Instance?.PararMusica();
+    // Para a música
+    GameplayMusicPlayer.Instance?.PararMusica();
 
-        // Salva a cena atual para poder dar Retry depois
-        PlayerPrefs.SetString("LastGameplayScene", SceneManager.GetActiveScene().name);
-        PlayerPrefs.Save();
+    // Pausar o timer da fase
+    LevelTimer timer = FindObjectOfType<LevelTimer>();
+    if (timer != null)
+        timer.PauseTimer();
 
-        Debug.Log("Jogador morreu - carregando tela de Game Over");
+    // Sinaliza para exibir o painel de Game Over
+    PlayerPrefs.SetInt("ShowGameOver", 1);
 
-        // Carrega a cena de Game Over
-        SceneManager.LoadScene("GameOverScreen");
-    }
+    // Salva a cena atual para o botão "Retry"
+    PlayerPrefs.SetString("LastGameplayScene", SceneManager.GetActiveScene().name);
+    PlayerPrefs.Save();
+
+    Debug.Log("Jogador morreu - carregando tela de Game Over");
+
+    // Carrega a cena de Game Over
+    SceneManager.LoadScene("GameOver"); // <-- troque para o nome real
+}
+
 }
