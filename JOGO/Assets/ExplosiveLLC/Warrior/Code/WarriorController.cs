@@ -290,40 +290,7 @@ namespace WarriorAnims
 
         #region Combat
 
-        void Attack(float timeSinceLastAttack)
-        {
-           
-			   
-
-            Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRadius, enemyLayer);
-            bool enemyHit = false;
-
-            foreach (Collider enemy in hitEnemies)
-            {
-                EnemyAI enemyAI = enemy.GetComponent<EnemyAI>();
-                if (enemyAI != null)
-                {
-                    enemyHit = true;
-
-                    Vector3 knockbackDirection = (enemy.transform.position - transform.position).normalized;
-                    int finalDamage = baseDamage * currentDamageMultiplier;
-                    enemyAI.TakeDamage(finalDamage, knockbackDirection, enemyAI.knockbackForce);
-
-                    Debug.Log($"Ataque acertou! Dano: {finalDamage} ({currentDamageMultiplier}x)");
-                }
-            }
-
-            if (enemyHit)
-            {
-                float beatDistance = Mathf.Min((musicTime / perfectAttackTime) % 1f, 1f - ((musicTime / perfectAttackTime) % 1f));
-                Debug.Log($"Beat Distance (Attack): {beatDistance}");
-
-                if (beatDistance <= timeMargin)
-                {
-                    currentDamageMultiplier = Mathf.Min(currentDamageMultiplier * 2, maxMultiplier);
-                }
-            }
-        }
+        
 
 
         /// <summary>
@@ -382,6 +349,7 @@ namespace WarriorAnims
 			if (canAction) {
 				Lock(true, true, true, true, 0, warriorTiming.TimingLock(warrior, ("attack" + attackNumber.ToString())));
 				SetAnimatorInt("Action", attackNumber);
+				Attack();
 				SetAnimatorTrigger(AnimatorTrigger.AttackTrigger);
 				if (warrior == Warrior.Spearman && attackNumber == 4 && ikHands != null)
 				{ ikHands.SetIKPause(warriorTiming.TimingLock(warrior, "attack4")); }
@@ -389,6 +357,41 @@ namespace WarriorAnims
 				{ ikHands.SetIKPause(warriorTiming.TimingLock(warrior, "attack5")); }
 			}
 		}
+
+		void Attack()
+        {
+           
+			   
+
+            Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRadius, enemyLayer);
+            bool enemyHit = false;
+
+            foreach (Collider enemy in hitEnemies)
+            {
+                EnemyAI enemyAI = enemy.GetComponent<EnemyAI>();
+                if (enemyAI != null)
+                {
+                    enemyHit = true;
+
+                    Vector3 knockbackDirection = (enemy.transform.position - transform.position).normalized;
+                    int finalDamage = baseDamage * currentDamageMultiplier;
+                    enemyAI.TakeDamage(finalDamage, knockbackDirection, enemyAI.knockbackForce);
+
+                    Debug.Log($"Ataque acertou! Dano: {finalDamage} ({currentDamageMultiplier}x)");
+                }
+            }
+
+            if (enemyHit)
+            {
+                float beatDistance = Mathf.Min((musicTime / perfectAttackTime) % 1f, 1f - ((musicTime / perfectAttackTime) % 1f));
+                Debug.Log($"Beat Distance (Attack): {beatDistance}");
+
+                if (beatDistance <= timeMargin)
+                {
+                    currentDamageMultiplier = Mathf.Min(currentDamageMultiplier * 2, maxMultiplier);
+                }
+            }
+        }
 
 		/// <summary>
 		/// 3 hit combo attack chain.

@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-public class PlayerCombat : MonoBehaviour
+public class PlayerCombat_modificado : MonoBehaviour
 {
     public int playerHealth = 100;
     public int baseDamage = 20;
@@ -20,6 +20,13 @@ public class PlayerCombat : MonoBehaviour
 
     private Animator animator;
     private bool isDead = false;
+    private CharacterController characterController;
+    private bool isJumping = false;
+    private bool isDoubleJumping = false;
+    private float verticalVelocity = 0f;
+    private float jumpForce = 8f;
+    private float gravity = 20f;
+    private bool isGrounded = true;
 
     private int currentDamageMultiplier = 1;
     private int maxMultiplier = 32;
@@ -35,10 +42,17 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private AudioClip sfxAtaque;
     [SerializeField] private AudioClip sfxRecebeDano;
     [SerializeField] private AudioClip sfxDash;
+    [SerializeField] private AudioClip sfxJump;
+
+    // Controle de animação de ataque
+    private int attackCombo = 0;
+    private float comboResetTime = 1.5f;
+    private float lastComboTime = 0f;
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        characterController = GetComponent<CharacterController>();
 
         if (musicSource != null && musicSource.isPlaying)
         {
@@ -50,22 +64,159 @@ public class PlayerCombat : MonoBehaviour
     {
         if (isDead) return;
 
-        if (!musicStarted && musicSource.isPlaying)
+        if (!musicStarted && musicSource != null && musicSource.isPlaying)
         {
             musicStarted = true;
         }
 
         if (!musicStarted) return;
 
+        // Verifica se o combo deve ser resetado
+        if (Time.time > lastComboTime + comboResetTime)
+        {
+            attackCombo = 0;
+        }
+
+        // Controle de movimento
+        HandleMovement();
+
+        // Controle de pulo
+        HandleJump();
+
+        // Controle de ataque
         if (Input.GetMouseButtonDown(0))
         {
             AttemptAttack();
         }
 
+        // Controle de dash
         if (Input.GetMouseButtonDown(1))
         {
             AttemptDash();
         }
+    }
+
+    void HandleMovement()
+    {
+        // Captura input de movimento
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        // Cria vetor de movimento
+        Vector3 moveDirection = new Vector3(horizontal, 0, vertical).normalized;
+        
+        // Verifica se está se movendo
+        bool isMoving = moveDirection.magnitude > 0.1f;
+        
+        // Atualiza parâmetro de movimento no Animator
+        animator.SetBool("Moving", isMoving);
+        
+        // Se estiver se movendo, define a velocidade de movimento
+        if (isMoving)
+        {
+            // Verifica se está correndo (segurando Shift)
+            bool isRunning = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+            
+            // Atualiza parâmetro de corrida no Animator
+            animator.SetBool("Running", isRunning);
+            
+            // Define a velocidade baseada em correr ou andar
+            float speed = isRunning ? 5f : 3f;
+            
+            // Aplica movimento via CharacterController
+            if (characterController != null && !isDashing)
+            {
+                // Rotaciona o personagem na direção do movimento
+                transform.rotation = Quaternion.LookRotation(moveDirection);
+                
+                // Aplica movimento horizontal
+                characterController.Move(moveDirection * speed * Time.deltaTime);
+            }
+        }
+        else
+        {
+            // Se não está se movendo, desativa animação de corrida
+            animator.SetBool("Running", false);
+        }
+    }
+
+    void HandleJump()
+    {
+        // Verifica se está no chão
+        isGrounded = characterController != null && characterController.isGrounded;
+        
+        // Atualiza parâmetro de grounded no Animator
+        animator.SetBool("Grounded", isGrounded);
+        
+        // Aplica gravidade
+        if (!isGrounded)
+        {
+            verticalVelocity -= gravity * Time.deltaTime;
+        }
+        else
+        {
+            verticalVelocity = -0.5f; // Pequena força para baixo quando no chão
+            
+            // Reseta flags de pulo quando tocar o chão
+            if (isJumping || isDoubleJumping)
+            {
+                isJumping = false;
+                isDoubleJumping = false;
+                
+                // Trigger de aterrissagem
+                animator.SetTrigger("Land");
+            }
+        }
+        
+        // Verifica input de pulo
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            // Pulo normal se estiver no chão
+            if (isGrounded)
+            {
+                Jump();
+            }
+            // Pulo duplo se já estiver no ar e não tiver feito pulo duplo ainda
+            else if (isJumping && !isDoubleJumping)
+            {
+                DoubleJump();
+            }
+        }
+        
+        // Aplica movimento vertical
+        if (characterController != null && !isDashing)
+        {
+            characterController.Move(new Vector3(0, verticalVelocity, 0) * Time.deltaTime);
+        }
+    }
+
+    void Jump()
+    {
+        // Aplica força de pulo
+        verticalVelocity = jumpForce;
+        isJumping = true;
+        
+        // Configura parâmetros do Animator
+        animator.SetTrigger("Jump");
+        animator.SetBool("Jumping", true);
+        
+        // Toca som de pulo
+        if (sfxJump != null && audioSource != null)
+            audioSource.PlayOneShot(sfxJump);
+    }
+
+    void DoubleJump()
+    {
+        // Aplica força de pulo novamente
+        verticalVelocity = jumpForce * 0.8f; // Um pouco menos de força no segundo pulo
+        isDoubleJumping = true;
+        
+        // Configura parâmetros do Animator
+        animator.SetTrigger("DoubleJump");
+        
+        // Toca som de pulo
+        if (sfxJump != null && audioSource != null)
+            audioSource.PlayOneShot(sfxJump);
     }
 
     void AttemptAttack()
@@ -74,22 +225,21 @@ public class PlayerCombat : MonoBehaviour
         float timeSinceLastAttack = currentTime - lastAttackTime;
         musicTime = musicSource.time;
 
+        // Incrementa o combo
+        attackCombo = (attackCombo % 3) + 1;
+        lastComboTime = currentTime;
+        
+        // Configura parâmetros do Animator para o ataque
+        animator.SetInteger("Action", attackCombo);
+        animator.SetInteger("TriggerNumber", 4); // Valor para ataques normais
+        animator.SetTrigger("Trigger");
+
         lastAttackTime = currentTime;
-
-  // Configurar os parâmetros exatos que vejo na sua imagem
-    animator.SetInteger("Action", 1);
-    animator.SetInteger("TriggerNumber", 4);
-    
-    // Você pode precisar definir o Trigger também, dependendo da configuração
-    animator.SetTrigger("Trigger");
-
         Attack(timeSinceLastAttack);
     }
 
     void Attack(float timeSinceLastAttack)
     {
-        animator.SetTrigger("Attack1");
-
         // 🔊 Toca som de ataque
         if (sfxAtaque != null && audioSource != null)
             audioSource.PlayOneShot(sfxAtaque);
@@ -121,6 +271,11 @@ public class PlayerCombat : MonoBehaviour
             {
                 currentDamageMultiplier = Mathf.Min(currentDamageMultiplier * 2, maxMultiplier);
             }
+            else
+            {
+                // Reseta o multiplicador se errar o ritmo
+                currentDamageMultiplier = 1;
+            }
         }
     }
 
@@ -131,6 +286,11 @@ public class PlayerCombat : MonoBehaviour
             GameObject nearestEnemy = FindNearestEnemyInRange();
             if (nearestEnemy != null)
             {
+                // Configura parâmetros do Animator para o dash
+                animator.SetInteger("Action", 1);
+                animator.SetInteger("TriggerNumber", 11); // Valor para MoveAttack1 (dash)
+                animator.SetTrigger("Trigger");
+                
                 if (dashCoroutine != null) StopCoroutine(dashCoroutine);
                 dashCoroutine = StartCoroutine(ExecuteDash(nearestEnemy.transform));
             }
@@ -158,6 +318,9 @@ public class PlayerCombat : MonoBehaviour
         playerHealth -= damage;
         Debug.Log($"Jogador tomou {damage} de dano! Vida: {playerHealth}");
 
+        // Configura parâmetros do Animator para receber dano
+        animator.SetTrigger("GetHit");
+
         // 🔊 Toca som de dano
         if (sfxRecebeDano != null && audioSource != null)
             audioSource.PlayOneShot(sfxRecebeDano);
@@ -176,7 +339,8 @@ public class PlayerCombat : MonoBehaviour
         animator.SetTrigger("Die");
         Debug.Log("Player morreu!");
 
-        GetComponent<CharacterController>().enabled = false;
+        if (characterController != null)
+            characterController.enabled = false;
         this.enabled = false;
     }
 
@@ -248,6 +412,11 @@ public class PlayerCombat : MonoBehaviour
             if (beatDistance <= timeMargin)
             {
                 currentDamageMultiplier = Mathf.Min(currentDamageMultiplier * 2, maxMultiplier);
+            }
+            else
+            {
+                // Reseta o multiplicador se errar o ritmo
+                currentDamageMultiplier = 1;
             }
         }
 
