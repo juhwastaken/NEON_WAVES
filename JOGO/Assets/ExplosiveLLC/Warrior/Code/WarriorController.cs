@@ -92,24 +92,6 @@ namespace WarriorAnims
 
 
 
-        public int baseDamage = 20;
-        public float attackRange = 5f;
-        public LayerMask enemyLayer;
-        public Transform attackPoint;
-        public float attackRadius = 1.5f;
-
-
-
-        private int currentDamageMultiplier = 1;
-        private int maxMultiplier = 32;
-        public float perfectAttackTime = 1.0833333334f;
-        public float timeMargin = 0.1f;
-        private float lastAttackTime = -Mathf.Infinity;
-        private bool musicStarted = false;
-        public AudioSource musicSource;
-        private float musicTime;
-
-
 
 
 
@@ -290,40 +272,6 @@ namespace WarriorAnims
 
         #region Combat
 
-        void Attack(float timeSinceLastAttack)
-        {
-           
-			   
-
-            Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRadius, enemyLayer);
-            bool enemyHit = false;
-
-            foreach (Collider enemy in hitEnemies)
-            {
-                EnemyAI enemyAI = enemy.GetComponent<EnemyAI>();
-                if (enemyAI != null)
-                {
-                    enemyHit = true;
-
-                    Vector3 knockbackDirection = (enemy.transform.position - transform.position).normalized;
-                    int finalDamage = baseDamage * currentDamageMultiplier;
-                    enemyAI.TakeDamage(finalDamage, knockbackDirection, enemyAI.knockbackForce);
-
-                    Debug.Log($"Ataque acertou! Dano: {finalDamage} ({currentDamageMultiplier}x)");
-                }
-            }
-
-            if (enemyHit)
-            {
-                float beatDistance = Mathf.Min((musicTime / perfectAttackTime) % 1f, 1f - ((musicTime / perfectAttackTime) % 1f));
-                Debug.Log($"Beat Distance (Attack): {beatDistance}");
-
-                if (beatDistance <= timeMargin)
-                {
-                    currentDamageMultiplier = Mathf.Min(currentDamageMultiplier * 2, maxMultiplier);
-                }
-            }
-        }
 
 
         /// <summary>
