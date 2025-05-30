@@ -118,6 +118,11 @@ public class PlayerCombat : MonoBehaviour
 
     void AttemptDash()
     {
+
+        // 🔁 Ativa animação de dash
+        animator.SetTrigger("Dash");
+
+
         if (Time.time >= lastDashTime + dashCooldown)
         {
             GameObject nearestEnemy = FindNearestEnemyInRange();
