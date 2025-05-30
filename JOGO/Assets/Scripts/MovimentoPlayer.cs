@@ -54,7 +54,7 @@ public class MovimentoJogador : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movimento), Time.deltaTime * 10f);
         }
 
-        animator.SetBool("Moving", movimento.magnitude > 0.1f);
+        animator.SetBool("Sprint", movimento.magnitude > 0.1f);
     }
 
     private void ProcessarPuloEGravidade()
@@ -68,7 +68,6 @@ public class MovimentoJogador : MonoBehaviour
         }
 
         animator.SetBool("EstaNoChao", estaNoChao);
-        Debug.Log("to no chao");
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
