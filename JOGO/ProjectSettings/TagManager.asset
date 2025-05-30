@@ -6,6 +6,10 @@ TagManager:
   tags:
   - subwoofer
   - Terreno
+<<<<<<< HEAD
+=======
+  - Enemy
+>>>>>>> juh
   layers:
   - Default
   - TransparentFX

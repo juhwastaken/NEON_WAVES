@@ -93,22 +93,31 @@ public class PauseMenu : MonoBehaviour
 
         if (musicSource != null && musicSource.isPlaying)
             musicSource.Pause();
+
+            CursorManager.LiberarCursor();
+
     }
 
     public void ResumeGame()
+{
+    Time.timeScale = 1f;
+    isPaused = false;
+
+    pausePanel.SetActive(false);
+    if (gameplayUI != null) gameplayUI.SetActive(true);
+    optionsPanel.SetActive(false);
+
+    FindObjectOfType<LevelTimer>()?.ResumeTimer();
+
+    // Só despausa a música se o tutorial já estiver fechado
+    if (!TutorialOverlay.TutorialAtivo && musicSource != null && !musicSource.isPlaying)
     {
-        Time.timeScale = 1f;
-        isPaused = false;
-
-        pausePanel.SetActive(false);
-        if (gameplayUI != null) gameplayUI.SetActive(true);
-        optionsPanel.SetActive(false);
-
-        FindObjectOfType<LevelTimer>()?.ResumeTimer();
-
-        if (musicSource != null && !musicSource.isPlaying)
-            musicSource.UnPause();
+        musicSource.UnPause();
     }
+
+    CursorManager.TravarCursor();
+}
+
 
     public void RetryLevel()
     {
